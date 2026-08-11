@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Daily dump of the leads table.
+#
+# Losing the data in week three means losing the test, so this runs from cron
+# rather than being something anyone has to remember:
+#   15 3 * * * /srv/scopeguard/deploy/dump.sh >> /var/log/scopeguard-dump.log 2>&1
+
+set -euo pipefail
+
+DUMP_DIR="${DUMP_DIR:-/srv/scopeguard/dumps}"
+KEEP_DAYS="${KEEP_DAYS:-60}"
+
+: "${DATABASE_URL:?set DATABASE_URL, e.g. by sourcing /srv/scopeguard/.env}"
+
+mkdir -p "$DUMP_DIR"
+stamp="$(date -u +%Y-%m-%d)"
+out="$DUMP_DIR/leads_scopeguard_$stamp.csv.gz"
+
+psql "$DATABASE_URL" -c "\copy (SELECT * FROM leads_scopeguard ORDER BY id) TO STDOUT WITH CSV HEADER" \
+  | gzip > "$out"
+
+find "$DUMP_DIR" -name 'leads_scopeguard_*.csv.gz' -mtime "+$KEEP_DAYS" -delete
+
+echo "$(date -u +%FT%TZ) wrote $out ($(du -h "$out" | cut -f1))"

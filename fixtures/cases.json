@@ -1,0 +1,32 @@
+[
+  {
+    "name": "plainly covered — revision within the limit",
+    "expect": "in_scope",
+    "scope": "WEB DESIGN AGREEMENT\n\n1. Deliverables. Responsive designs for five (5) pages: Home, Shop, Product Detail, About, Contact. Delivered as Figma files plus exported image assets.\n2. Revisions. The fee includes up to three (3) rounds of revisions across the five agreed page designs. A round means one consolidated set of feedback. Additional rounds are quoted separately.\n3. Timeline. First designs within 10 working days of receiving brand assets and copy. Each revision round returned within 5 working days.\n4. Not included. Front-end development, CMS implementation, copywriting, photography, illustration, logo or brand identity work, ongoing maintenance, and any page not listed in section 1.\n5. Content. The Client provides all copy and photography.",
+    "request": "Thanks for sending these over! A few notes on the Shop page — the product grid feels cramped and we'd like the filters moved to the left. That's our first proper round of feedback, everything else looks good."
+  },
+  {
+    "name": "new deliverable, explicitly excluded",
+    "expect": "out_of_scope",
+    "scope": "WEB DESIGN AGREEMENT\n\n1. Deliverables. Responsive designs for five (5) pages: Home, Shop, Product Detail, About, Contact. Delivered as Figma files plus exported image assets.\n2. Revisions. The fee includes up to three (3) rounds of revisions across the five agreed page designs. Additional rounds are quoted separately.\n4. Not included. Front-end development, CMS implementation, copywriting, photography, illustration, logo or brand identity work, ongoing maintenance, and any page not listed in section 1.",
+    "request": "Love the designs. One small thing — while you're in there, could you knock up a quick blog page too? Nothing fancy, just something that matches the rest. Should be quick for you!"
+  },
+  {
+    "name": "topic covered, count exhausted",
+    "expect": "out_of_scope",
+    "scope": "WEB DESIGN AGREEMENT\n\n1. Deliverables. Responsive designs for five (5) pages: Home, Shop, Product Detail, About, Contact.\n2. Revisions. The fee includes up to three (3) rounds of revisions across the five agreed page designs. A round means one consolidated set of feedback from the Client. Additional rounds are quoted separately and invoiced on completion.\n3. Timeline. Each revision round is returned within 5 working days of feedback.",
+    "request": "Sorry to be a pain — I know we've been round this three times already, but could you tweak the hero spacing on the product page one more time? Last change, promise."
+  },
+  {
+    "name": "terms say nothing either way",
+    "expect": "unclear",
+    "scope": "BRAND IDENTITY AGREEMENT\n\nThe Designer will deliver a primary logo, one secondary lockup, a colour palette, and type specimens, supplied as vector files with a one-page usage summary. Fee is fixed and invoiced 50% up front, 50% on delivery. Two rounds of feedback are included at the concept stage. Timeline is four weeks from kickoff.",
+    "request": "These are great. Could you send over the source files as well? Our developer says they'll need the working files rather than the exports."
+  },
+  {
+    "name": "sounds like an extra, is actually listed",
+    "expect": "in_scope",
+    "scope": "CONTENT RETAINER\n\nScope of services, per month: four (4) long-form articles of 1,200-1,500 words each, on topics agreed at the start of the month; one round of edits per article; upload of each finished article to the Client's CMS including formatting, internal links, and a meta description. Not included: original photography, paid promotion, and social copy.\n\nInvoiced monthly in advance. Either party may end the retainer with 30 days' written notice.",
+    "request": "Article three looks good to go. Can you get it into WordPress with the meta description filled in and links back to the pillar page? We'd like it live Thursday."
+  }
+]

@@ -1,0 +1,22 @@
+[Unit]
+Description=Scope Creep Guard
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=scopeguard
+WorkingDirectory=/srv/scopeguard
+EnvironmentFile=/srv/scopeguard/.env
+ExecStart=/usr/bin/node src/server.js
+Restart=always
+RestartSec=3
+
+# The process handles pasted contracts. Keep its blast radius small.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/scopeguard/dumps
+
+[Install]
+WantedBy=multi-user.target

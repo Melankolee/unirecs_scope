@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check a client request — Scope Creep Guard</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">◆</span> Scope Creep Guard</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Screen 1 — the agreed terms ───────────────────────────────── -->
+  <section id="screen-scope">
+    <div class="wrap">
+      <p class="eyebrow">Step 1 of 2</p>
+      <h1>Paste what you agreed to</h1>
+      <p class="muted">
+        The contract, the SOW, the proposal they accepted, or the email thread where
+        you settled the details. Whatever actually defines the work.
+      </p>
+      <p class="privacy-line">This text isn’t stored — it’s used for this check and then it’s gone.</p>
+
+      <textarea id="scope-input" placeholder="Paste the agreement here…" spellcheck="false"></textarea>
+      <div class="field-foot">
+        <button class="btn-quiet" id="use-example" type="button">Don’t have it handy? Use an example</button>
+        <span class="counter" id="scope-counter"></span>
+      </div>
+      <p class="error" id="scope-error"></p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="scope-next" type="button">Next</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Screen 2 — the client's message ───────────────────────────── -->
+  <section id="screen-request" hidden>
+    <div class="wrap">
+      <p class="eyebrow">Step 2 of 2</p>
+      <h1>Paste the client’s message</h1>
+
+      <details class="scope-recap">
+        <summary id="scope-recap-summary">The agreement you pasted</summary>
+        <textarea id="scope-recap-input" spellcheck="false"></textarea>
+      </details>
+
+      <p class="muted">The request itself — forwarded email, Slack message, whatever arrived.</p>
+      <textarea id="request-input" placeholder="“Hey! Quick one — could you also…”" spellcheck="false"></textarea>
+      <div class="field-foot">
+        <span></span>
+        <span class="counter" id="request-counter"></span>
+      </div>
+      <p class="error" id="request-error"></p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="check-btn" type="button">Check this request</button>
+        <button class="btn-quiet" id="back-to-scope" type="button">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Waiting ───────────────────────────────────────────────────── -->
+  <section id="screen-waiting" class="waiting" hidden>
+    <div class="wrap">
+      <h2>Working on it</h2>
+      <ul class="waiting-steps" id="waiting-steps">
+        <li data-step="0">Reading your agreement</li>
+        <li data-step="1">Comparing the request</li>
+        <li data-step="2">Drafting your reply</li>
+      </ul>
+      <p class="muted small">Usually five to fifteen seconds.</p>
+    </div>
+  </section>
+
+  <!-- ── Verdict ───────────────────────────────────────────────────── -->
+  <section id="screen-verdict" hidden>
+    <div class="wrap">
+      <div class="card">
+        <div class="verdict-status" id="verdict-status"><span class="dot"></span><span id="verdict-label"></span></div>
+        <p class="verdict-reasoning" id="verdict-reasoning"></p>
+        <blockquote class="evidence" id="verdict-evidence" hidden></blockquote>
+        <p class="confidence-note" id="verdict-confidence" hidden></p>
+
+        <div class="reply-block">
+          <div class="reply-head">
+            <span class="label">Reply to the client</span>
+            <button class="btn btn-ghost" id="copy-reply" type="button">Copy reply</button>
+          </div>
+          <p class="reply-text" id="verdict-reply"></p>
+        </div>
+
+        <details class="change-order" id="change-order" hidden>
+          <summary>Change order</summary>
+          <dl>
+            <dt>Summary</dt>
+            <dd id="co-summary"></dd>
+            <dt>Worth pinning down</dt>
+            <dd id="co-terms"></dd>
+          </dl>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Price ─────────────────────────────────────────────────────── -->
+  <section id="screen-price" hidden>
+    <div class="wrap">
+      <h2 id="price-heading">One check is on us</h2>
+      <p class="muted" id="price-sub">The next ones are part of the full version.</p>
+      <p class="price-amount"><span id="price-value">$19</span><span class="per">/<span id="price-period">month</span></span></p>
+      <ul class="price-list">
+        <li>Unlimited checks</li>
+        <li>Every verdict and reply kept in one place</li>
+        <li>Several projects, each with its own agreement</li>
+      </ul>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="price-cta" type="button">Get early access</button>
+        <button class="btn-quiet" id="price-dismiss" type="button">Not now</button>
+      </div>
+      <p class="error" id="price-note"></p>
+    </div>
+  </section>
+
+  <!-- ── Failure ───────────────────────────────────────────────────── -->
+  <section id="screen-error" hidden>
+    <div class="wrap">
+      <h2>That didn’t come back</h2>
+      <p class="muted" id="fatal-error"></p>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="retry-btn" type="button">Try again</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Email gate ──────────────────────────────────────────────────── -->
+<div class="gate-backdrop" id="gate" hidden>
+  <div class="gate">
+    <h2>Where should we send your access?</h2>
+    <p class="muted small">
+      Your result appears on this screen in a moment — the address is so we can send
+      you a way in when the full version opens. That’s the only thing we’ll use it for.
+    </p>
+    <input type="email" id="email-input" placeholder="you@studio.com" autocomplete="email" inputmode="email">
+    <p class="error" id="email-error"></p>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="email-submit" type="button">Show my verdict</button>
+      <button class="btn-quiet" id="gate-cancel" type="button">Back</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div>Scope Creep Guard</div>
+    <nav>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/analytics.js"></script>
+<script src="/js/example.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
