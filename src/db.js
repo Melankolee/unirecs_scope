@@ -33,15 +33,21 @@ export async function hasUsedCheck({ email, visitorId }) {
   return rows.length > 0;
 }
 
-export async function insertLead({ email, visitorId, marks }) {
+/**
+ * `source` says which form the address came from: 'gate' (before a verdict) or
+ * 'access' (the landing page's waitlist). A landing row never gets a verdict,
+ * so it is invisible to `hasUsedCheck` above and costs the visitor nothing.
+ */
+export async function insertLead({ email, visitorId, marks, source = 'gate' }) {
   const { rows } = await query(
     `INSERT INTO leads_scopeguard
-       (email, visitor_id, gclid, utm_source, utm_medium, utm_campaign, utm_term)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
+       (email, visitor_id, source, gclid, utm_source, utm_medium, utm_campaign, utm_term)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
      RETURNING id`,
     [
       email,
       visitorId || null,
+      source,
       marks.gclid || null,
       marks.utm_source || null,
       marks.utm_medium || null,

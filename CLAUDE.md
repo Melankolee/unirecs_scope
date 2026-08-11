@@ -1,8 +1,13 @@
 # Working in this repo
 
-Scope Creep Guard — a one-mechanic demand test. Read
+Signalens — a one-mechanic demand test. Read
 [`docs/scopeguard-mvp-spec.md`](docs/scopeguard-mvp-spec.md) before changing
 behaviour; it is the source of truth and it says what deliberately isn't here.
+Its §0 records where the shipped product knowingly departs from the rest of it.
+
+The name only changed on the surface. `scopeguard` still names the systemd unit,
+the deploy paths, the `sg_vid` cookie, and the `product` field on every analytics
+event — those are keys, and renaming them buys nothing and splits the reports.
 
 ## Commands
 
@@ -34,6 +39,14 @@ confidence requires a quotable `evidence`. Keep them there.
 transpiling, or a framework, it is out of scope for this MVP.
 
 **The price lives in config**, never in markup — it is still being agreed.
+
+**English lives in the markup; `js/i18n.js` only overrides it.** That keeps every
+page readable before the script runs and without JavaScript at all. Anything
+built from JS must re-render through `SG.onLang`, or a language switch leaves
+half the screen behind. The legal pages stay English on purpose.
+
+**`docs/DESIGN.md` describes what is actually in `public/styles.css`.** Change one
+and change the other, or it becomes fiction.
 
 ## If the schedule slips
 

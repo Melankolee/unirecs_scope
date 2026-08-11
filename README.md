@@ -1,11 +1,17 @@
-# Scope Creep Guard
+# Signalens
 
 A freelancer pastes the terms they agreed to and the message their client just
 sent. They get back a verdict — in scope, out of scope, or genuinely unclear —
 the line it rests on, and a reply they can send as it is.
 
 This is a demand test, not a product. One mechanic, no accounts, no billing.
-The spec it is built to is [`docs/scopeguard-mvp-spec.md`](docs/scopeguard-mvp-spec.md).
+The spec it is built to is [`docs/scopeguard-mvp-spec.md`](docs/scopeguard-mvp-spec.md),
+and the look is described in [`docs/DESIGN.md`](docs/DESIGN.md).
+
+The product was called Scope Creep Guard until August 2026. The old name survives
+in the places where it is only an identifier — the systemd unit, `/srv/scopeguard`,
+the `sg_vid` cookie, the `product` field on analytics events — because renaming
+those splits the reports and buys nothing.
 
 ## Running it locally
 
@@ -33,14 +39,17 @@ The spec calls for 15–20 before launch; five ship in the repo.
 |---|---|
 | `src/prompt.js` | System prompt and the JSON schema the verdict must match |
 | `src/llm.js` | The single model call: structured output, 30s timeout, one retry, cost logging |
-| `src/routes/api.js` | `/api/lead`, `/api/check`, `/api/event`, `/api/config` |
+| `src/routes/api.js` | `/api/lead`, `/api/access`, `/api/check`, `/api/event`, `/api/config` |
 | `src/db.js` | The one table, plus the one-check-per-visitor rule |
 | `public/` | Landing, tool, privacy, terms — no build step |
+| `public/js/i18n.js` | EN/RU strings and the header switcher |
 | `fixtures/cases.json` | Prompt regression cases |
 | `deploy/` | systemd unit, nginx config, nightly dump |
 
 The whole front end is plain HTML, CSS, and ES5-flavoured JS served statically.
-There is nothing to compile.
+There is nothing to compile. One thing does come from outside: the Satoshi
+webfont, imported from `api.fontshare.com` at the top of `styles.css`. It has a
+system fallback, so a blocked CDN costs the page its typeface and nothing else.
 
 ## The privacy promise is load-bearing
 

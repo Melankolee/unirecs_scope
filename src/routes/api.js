@@ -71,6 +71,32 @@ api.post('/lead', rateLimit({ max: 8 }), async (req, res) => {
   }
 });
 
+/**
+ * The landing page's "Get access" form. The same address, a different question:
+ * these people asked before being shown anything, so the row is marked
+ * `source: 'access'` and stays out of the gate's numbers. No verdict is ever
+ * written against it, which is also why it does not spend the free check.
+ */
+api.post('/access', rateLimit({ max: 8 }), async (req, res) => {
+  const vid = visitorId(req, res);
+  const { ok, email, error } = validateEmail(req.body?.email);
+  if (!ok) return res.status(400).json({ error });
+
+  try {
+    const leadId = await insertLead({
+      email,
+      visitorId: vid,
+      marks: cleanMarks(req.body?.marks),
+      source: 'access',
+    });
+    log({ level: 'info', at: 'access', outcome: 'created', leadId });
+    return res.json({ ok: true });
+  } catch (err) {
+    log({ level: 'error', at: 'access', message: err.message });
+    return res.status(500).json({ error: 'Something went wrong on our side. Try again.' });
+  }
+});
+
 api.post('/check', rateLimit({ max: 5 }), async (req, res) => {
   const vid = req.cookies?.[VISITOR_COOKIE];
   const leadId = Number.parseInt(req.body?.leadId, 10);

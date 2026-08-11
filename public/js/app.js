@@ -5,13 +5,11 @@
     limits: { scopeMin: 200, scopeMax: 15000, requestMin: 20, requestMax: 3000 },
     leadId: null,
     exampleUsed: false,
+    verdict: null,
+    priceLimited: false,
     waitTimers: [],
-  };
-
-  var VERDICT_LABEL = {
-    in_scope: 'In scope',
-    out_of_scope: 'Out of scope',
-    unclear: 'Unclear',
+    waitTick: null,
+    waitStart: 0,
   };
 
   /* ---------- screens ---------- */
@@ -26,57 +24,81 @@
 
   /* ---------- counters ---------- */
 
-  function bindCounter(input, counter, min, max) {
+  function bindCounter(input, counter, max) {
     function update() {
       var n = input.value.trim().length;
       counter.textContent = n.toLocaleString('en-US') + ' / ' + max.toLocaleString('en-US');
-      counter.classList.toggle('over', n > max);
+      counter.classList.toggle('is-over', n > max);
     }
     input.addEventListener('input', update);
     update();
   }
 
-  function localValidate(value, min, max, what) {
+  function localValidate(value, min, max, whatKey) {
     var n = value.trim().length;
-    if (n === 0) return 'Paste the ' + what + ' first.';
-    if (n < min) return 'Add a bit more — at least ' + min + ' characters.';
-    if (n > max) return "That's over the " + max.toLocaleString('en-US') + ' character limit.';
+    if (n === 0) return SG.t('app.err.empty', { what: SG.t(whatKey) });
+    if (n < min) return SG.t('app.err.short', { n: min });
+    if (n > max) return SG.t('app.err.long', { n: max.toLocaleString('en-US') });
     return null;
   }
 
-  /* ---------- waiting ---------- */
+  /* ---------- waiting ----------
+   *
+   * A spinner for ten seconds reads as a hang. Named steps read as work, and
+   * the ring gives the wait a shape.
+   *
+   * The percentage is honest about what it is: the server sends no progress, so
+   * it eases toward 95% on a curve tuned to the measured 3-7s round trip and
+   * waits there. It never claims to be finished before the answer arrives. */
+
+  var WAIT_CURVE_MS = 6000;
+  var WAIT_CEILING = 0.95;
+
+  function setStep(index) {
+    var lines = $('loader-lines').querySelectorAll('.loader__line');
+    lines.forEach(function (line, i) {
+      line.className = 'loader__line' + (i < index ? ' is-done' : i === index ? ' is-active' : '');
+    });
+    $('loader-steps').querySelectorAll('span').forEach(function (span, i) {
+      span.classList.toggle('is-reached', i <= index);
+    });
+  }
+
+  function paint(p) {
+    $('loader-ring').style.setProperty('--p', p);
+    $('loader-percent').textContent = Math.round(p * 100) + '%';
+  }
 
   function startWaiting() {
-    var items = $('waiting-steps').querySelectorAll('li');
-    items.forEach(function (li) { li.className = ''; });
-    items[0].className = 'active';
+    state.waitStart = Date.now();
+    setStep(0);
+    paint(0);
 
-    // A spinner for ten seconds reads as a hang. Named steps read as work.
-    //
-    // Measured round trips are 3-7s, so the original 4s/9s pacing meant the
-    // third caption usually never appeared. These land all three inside a fast
-    // response and simply hold longer on a slow one.
-    state.waitTimers.push(setTimeout(function () {
-      items[0].className = 'done';
-      items[1].className = 'active';
-    }, 1800));
-    state.waitTimers.push(setTimeout(function () {
-      items[1].className = 'done';
-      items[2].className = 'active';
-    }, 3800));
+    state.waitTick = setInterval(function () {
+      var elapsed = Date.now() - state.waitStart;
+      paint(WAIT_CEILING * (1 - Math.exp(-elapsed / WAIT_CURVE_MS)));
+    }, 80);
+
+    // Timed so all three captions land inside a fast response and simply hold
+    // longer on a slow one.
+    state.waitTimers.push(setTimeout(function () { setStep(1); }, 1800));
+    state.waitTimers.push(setTimeout(function () { setStep(2); }, 3800));
   }
 
   function stopWaiting() {
     state.waitTimers.forEach(clearTimeout);
     state.waitTimers = [];
+    clearInterval(state.waitTick);
+    state.waitTick = null;
+    paint(1);
   }
 
   /* ---------- verdict ---------- */
 
   function renderVerdict(v) {
     var status = $('verdict-status');
-    status.className = 'verdict-status v-' + v.verdict;
-    $('verdict-label').textContent = VERDICT_LABEL[v.verdict] || v.verdict;
+    status.className = 'verdict__status is-' + v.verdict;
+    status.textContent = SG.t('verdict.' + v.verdict);
     $('verdict-reasoning').textContent = v.reasoning;
 
     var evidence = $('verdict-evidence');
@@ -89,7 +111,7 @@
 
     var note = $('verdict-confidence');
     if (v.confidence === 'low') {
-      note.textContent = 'Low confidence — the terms genuinely read more than one way here. Treat this as a starting point for the conversation, not a settled answer.';
+      note.textContent = SG.t('verdict.lowConfidence');
       note.hidden = false;
     } else {
       note.hidden = true;
@@ -102,10 +124,17 @@
       $('co-summary').textContent = v.change_order.summary;
       $('co-terms').textContent = v.change_order.suggested_terms;
       co.hidden = false;
-      co.open = false;
+      $('verdict-pill-row').hidden = false;
     } else {
       co.hidden = true;
+      $('verdict-pill-row').hidden = true;
     }
+  }
+
+  function showVerdict(v) {
+    state.verdict = v;
+    renderVerdict(v);
+    $('change-order').open = false;
 
     show('screen-verdict');
     SG.track('verdict_shown');
@@ -117,13 +146,18 @@
 
   /* ---------- price ---------- */
 
+  function renderPrice() {
+    $('price-heading').textContent = SG.t(state.priceLimited ? 'app.price.titleLimited' : 'app.price.title');
+    $('price-sub').textContent = SG.t(state.priceLimited ? 'app.price.subLimited' : 'app.price.sub');
+  }
+
   function showPrice(limited) {
     if (limited) {
-      $('price-heading').textContent = 'You’ve used your free check';
-      $('price-sub').textContent = 'Further checks are part of the full version.';
+      state.priceLimited = true;
       SCREENS.forEach(function (s) { $(s).hidden = true; });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    renderPrice();
     $('screen-price').hidden = false;
     SG.track('price_screen_view', limited ? { reason: 'limit' } : {});
   }
@@ -154,7 +188,7 @@
       request: $('request-input').value.trim(),
     }).then(function (data) {
       stopWaiting();
-      renderVerdict(data.verdict);
+      showVerdict(data.verdict);
     }).catch(function (err) {
       stopWaiting();
       SG.track('verdict_error');
@@ -174,29 +208,36 @@
     SG.initAnalytics(cfg ? cfg.ga4MeasurementId : '');
 
     var L = state.limits;
-    bindCounter($('scope-input'), $('scope-counter'), L.scopeMin, L.scopeMax);
-    bindCounter($('request-input'), $('request-counter'), L.requestMin, L.requestMax);
+    bindCounter($('scope-input'), $('scope-counter'), L.scopeMax);
+    bindCounter($('request-input'), $('request-counter'), L.requestMax);
   }
 
+  /* Nothing fills a field on its own. Both examples are behind their own
+     button, on the screen the field belongs to — a value that appears in a
+     box the visitor never touched reads as their own text a screen later. */
   $('use-example').addEventListener('click', function () {
     $('scope-input').value = SG.EXAMPLE_SCOPE;
     $('scope-input').dispatchEvent(new Event('input'));
     $('scope-error').textContent = '';
     state.exampleUsed = true;
-    SG.track('example_used');
+    SG.track('example_used', { field: 'scope' });
+  });
+
+  $('use-example-request').addEventListener('click', function () {
+    $('request-input').value = SG.EXAMPLE_REQUEST;
+    $('request-input').dispatchEvent(new Event('input'));
+    $('request-error').textContent = '';
+    state.exampleUsed = true;
+    SG.track('example_used', { field: 'request' });
   });
 
   $('scope-next').addEventListener('click', function () {
     var value = $('scope-input').value;
-    var error = localValidate(value, state.limits.scopeMin, state.limits.scopeMax, 'agreement');
+    var error = localValidate(value, state.limits.scopeMin, state.limits.scopeMax, 'app.what.scope');
     $('scope-error').textContent = error || '';
     if (error) return;
 
     $('scope-recap-input').value = value;
-    if (state.exampleUsed && !$('request-input').value.trim()) {
-      $('request-input').value = SG.EXAMPLE_REQUEST;
-      $('request-input').dispatchEvent(new Event('input'));
-    }
     show('screen-request');
     SG.track('scope_filled', { used_example: state.exampleUsed });
   });
@@ -215,7 +256,7 @@
 
   $('check-btn').addEventListener('click', function () {
     var error = localValidate(
-      $('request-input').value, state.limits.requestMin, state.limits.requestMax, "client's message",
+      $('request-input').value, state.limits.requestMin, state.limits.requestMax, 'app.what.request',
     );
     $('request-error').textContent = error || '';
     if (error) return;
@@ -263,8 +304,8 @@
     var button = this;
     var text = $('verdict-reply').textContent;
     var done = function () {
-      button.textContent = 'Copied';
-      setTimeout(function () { button.textContent = 'Copy reply'; }, 2000);
+      button.textContent = SG.t('app.copied');
+      setTimeout(function () { button.textContent = SG.t('app.copy'); }, 2000);
       SG.track('reply_copied');
       post('/api/event', { leadId: state.leadId, type: 'reply_copied' }).catch(function () {});
     };
@@ -287,7 +328,7 @@
 
   $('price-cta').addEventListener('click', function () {
     this.disabled = true;
-    $('price-note').textContent = 'You’re on the list — we’ll email you when it opens.';
+    $('price-note').textContent = SG.t('app.price.done');
     SG.track('price_cta_click');
     post('/api/event', { leadId: state.leadId, type: 'price_cta' }).catch(function () {});
   });
@@ -300,6 +341,13 @@
 
   $('retry-btn').addEventListener('click', function () {
     if (state.leadId) runCheck(); else show('screen-request');
+  });
+
+  /* The verdict and the price heading are built in JS, so a language switch has
+     to rebuild them or half the screen stays in the old language. */
+  SG.onLang(function () {
+    if (state.verdict) renderVerdict(state.verdict);
+    renderPrice();
   });
 
   SG.config().then(init).catch(function () { init(null); });

@@ -1,4 +1,6 @@
-/* GA4 wrapper. Every event carries product: "scopeguard".
+/* GA4 wrapper. Every event carries product: "scopeguard" — the product is now
+ * called Signalens, but this string is an analytics key, and renaming it would
+ * split every report at the rename date for no gain.
  *
  * Analytics cookies are not set until the visitor accepts. Events fired before
  * a decision are queued and flushed on accept; if the visitor declines, they are
@@ -101,15 +103,29 @@ window.SG = window.SG || {};
     if (consent() !== null) return;
 
     var bar = document.createElement('div');
-    bar.className = 'cookie-bar';
+    bar.className = 'cookie';
     bar.innerHTML =
-      '<div class="wrap">' +
-      '<p>We use analytics cookies to see how many people finish a check. Nothing you paste is stored either way. ' +
-      '<a href="/privacy.html">Privacy</a></p>' +
-      '<div class="actions">' +
-      '<button class="btn btn-ghost" data-cookie="deny">Decline</button>' +
-      '<button class="btn btn-primary" data-cookie="accept">Accept</button>' +
+      '<div class="cookie__inner">' +
+      '<span data-i18n="cookie.text"></span>' +
+      '<div class="cookie__actions">' +
+      '<button class="btn-ghost" data-cookie="deny" data-i18n="cookie.decline"></button>' +
+      '<button class="btn-primary btn-primary--sm" data-cookie="accept" data-i18n="cookie.accept"></button>' +
       '</div></div>';
+
+    var link = document.createElement('a');
+    link.href = '/privacy.html';
+
+    // The bar is built after i18n has already walked the document, so it fills
+    // itself in — and re-fills if the visitor switches language while it is up.
+    SG.onLang(function () {
+      bar.querySelectorAll('[data-i18n]').forEach(function (el) {
+        el.textContent = SG.t(el.getAttribute('data-i18n'));
+      });
+      link.textContent = SG.t('nav.privacy');
+      var text = bar.querySelector('span');
+      text.appendChild(document.createTextNode(' '));
+      text.appendChild(link);
+    });
 
     bar.addEventListener('click', function (event) {
       var action = event.target.getAttribute('data-cookie');
