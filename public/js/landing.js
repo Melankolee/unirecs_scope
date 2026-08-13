@@ -15,9 +15,9 @@
 
   /* ---------- access form ----------
    *
-   * Three of the four CTAs ask for an address instead of sending the visitor
-   * straight into the tool. One box serves all three, and the placement travels
-   * with every event so the report can tell which of them earned the email.
+   * Every CTA on the page sends the visitor straight into the tool — except the
+   * header one, which asks for an address instead. The box is still keyed by
+   * placement so the report reads the same if another CTA is pointed at it.
    *
    * The event is `access_submit`, never `email_submit`: that name belongs to the
    * gate before the verdict, and the whole test rests on reading it against

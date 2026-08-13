@@ -99,6 +99,7 @@ p { margin: 0 0 1rem; }
   text-transform: uppercase;
   color: var(--muted);
 }
+.label--accent { color: var(--accent-2); }
 
 /* ---------- Layout ---------- */
 .wrap { max-width: var(--page); margin: 0 auto; padding: 0 2rem; }
@@ -232,18 +233,24 @@ a.btn-block { display: block; }
   border-radius: var(--radius);
   padding: 2rem;
 }
-.card--float { padding: 1.75rem; box-shadow: 0 30px 90px -40px rgba(123, 97, 255, 0.6); }
-.card--deep { background: var(--bg-deep); }
+/* The hero card is a sample, not a screen: everything inside it is one step
+   down from the size the same block takes in the tool. */
+.card--float { padding: 1.5rem; box-shadow: 0 30px 90px -40px rgba(123, 97, 255, 0.6); }
+.card--float .message, .card--float .reply { padding: 1rem 1.15rem; font-size: 0.95rem; }
+.card--float .message { margin-bottom: 1.1rem; }
+.card--float > p { font-size: 0.95rem; margin-bottom: 1.1rem; }
+/* Full page width, but shallow: three short lines and a button, and the tall
+   padding turned the card into an empty field with text floating in it. */
 .card--cta {
   position: relative; overflow: hidden;
   background: var(--gradient);
   color: #ffffff; border: 0;
-  padding: clamp(3rem, 8vw, 6rem) 2rem;
+  padding: clamp(2.25rem, 4vw, 3rem) 2rem;
   text-align: center;
 }
-.card--cta h2 { margin: 0 auto 1rem; }
-.card--cta p { color: rgba(255, 255, 255, 0.92); }
-.card--cta .note { color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 1.25rem; }
+.card--cta h2 { margin: 0 auto 0.75rem; text-wrap: balance; }
+.card--cta p { color: rgba(255, 255, 255, 0.92); margin-bottom: 0; }
+.card--cta .note { color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 1rem; }
 
 .sunken { background: var(--bg-sunken); border-radius: var(--radius); padding: 1.4rem; }
 
@@ -268,6 +275,68 @@ a.btn-block { display: block; }
   margin-bottom: 1.1rem;
 }
 
+/* ---------- Two features (landing only) ---------- */
+/* The pair reads as a pair through depth, not through inversion: one card sits
+   a step below the page, the other a step above it. A white card here would be
+   the only light surface on the site. */
+.features__title { max-width: 20ch; text-wrap: balance; margin-bottom: 3rem; }
+/* Two cards, not three steps: they hold a paragraph and a list each, so they
+   drop to one column earlier than .cards would on its own. */
+.cards--pair { grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr)); }
+.feature { display: flex; flex-direction: column; padding: 2.25rem; }
+.feature--deep { background: var(--bg-deep); }
+.feature__head { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.5rem; }
+.feature__tile {
+  width: 2.5rem; height: 2.5rem; flex: none;
+  border-radius: var(--radius);
+  background: var(--gradient-mark);
+}
+.feature__tile--soft {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  border: 1px solid var(--accent-dim);
+}
+.feature h3 { margin-bottom: 0.9rem; }
+.feature > p { margin-bottom: 1.6rem; }
+
+/* Bulleted, not numbered: these are three things the report shows, in no
+   order. The dots take accent tones — the gradient family is decoration, and
+   status colours stay on verdicts. */
+.feature__list { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; gap: 0.9rem; }
+.feature__list li {
+  display: grid; grid-template-columns: 0.5rem 1fr; gap: 0.9rem;
+  color: var(--muted); font-size: 0.95rem;
+}
+.feature__list li::before {
+  content: "";
+  width: 0.5rem; height: 0.5rem;
+  border-radius: var(--radius);
+  margin-top: 0.55rem;
+  background: var(--accent);
+}
+.feature__list li:nth-child(1)::before { background: var(--accent-3); }
+.feature__list li:nth-child(2)::before { background: var(--accent-2); }
+
+/* Pinned to the bottom edge so the button sits on one line across both cards
+   however long the copy runs. */
+.feature .btn-primary { margin-top: auto; align-self: flex-start; }
+
+/* The two sample requests reuse .message: same sunken block, same label. The
+   accent one is the paraphrase — the case people assume a tool won't take.
+   (.message--accent itself lives next to .message below: it overrides that
+   rule's shorthand and has to come after it.) */
+/* One step down from the tool's own .message, the way .card--float is: these
+   are two one-line samples, not the request someone actually pasted. */
+.feature .message { margin: 0; padding: 0.85rem 1.1rem; font-size: 0.95rem; }
+.feature .message__head { margin-bottom: 0.4rem; }
+.feature__or {
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--placeholder);
+  text-align: center;
+  margin: 0.75rem 0;
+}
+
 /* ---------- Verdict ---------- */
 .verdict__status {
   display: flex; align-items: center; gap: 0.7rem;
@@ -284,6 +353,20 @@ a.btn-block { display: block; }
 .is-in_scope { color: var(--ok); }
 .is-unclear { color: var(--warn); }
 .is-out_of_scope { color: var(--stop); }
+
+/* Badge form of the status, for the hero card: there the verdict is one beat
+   in a three-beat story next to a 4rem headline, not the top of a result
+   screen, and at 1.6rem it takes over the whole column. */
+.verdict__status--badge {
+  display: inline-flex;
+  font-size: 0.95rem;
+  gap: 0.5rem;
+  border-radius: var(--radius);
+  padding: 0.45rem 0.85rem;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  margin-bottom: 0.9rem;
+}
+.verdict__status--badge::before { width: 0.5rem; height: 0.5rem; }
 
 .pill {
   display: inline-flex; align-items: center; gap: 0.55rem;
@@ -312,17 +395,25 @@ a.btn-block { display: block; }
 }
 .message__head { margin-bottom: 0.7rem; }
 .message p { margin: 0; color: var(--muted); }
+/* The paraphrased request in the features block — same block, tinted, so the
+   pair reads as two ways in rather than two separate samples. */
+.message--accent {
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--bg-sunken));
+}
 
 .reply { background: var(--bg-sunken); border-radius: var(--radius); padding: 1.4rem; }
 .reply__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.9rem; }
 .reply p { margin: 0; white-space: pre-line; }
 
+/* Sits where .evidence sits on the other two verdicts, and so takes the same
+   shape: on an `unclear` card there is no quotable line, and a dashed mono box
+   in that slot read as a different kind of object rather than the same slot
+   holding a different thing. Upright, not italic — a note, not a quotation. */
 .low-confidence {
-  border: 1px dashed var(--accent-dim);
-  border-radius: var(--radius);
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  font: 400 12px/1.5 var(--mono);
+  margin: 0 0 1.75rem;
+  padding: 0.25rem 0 0.25rem 1.1rem;
+  border-left: 3px solid var(--accent-dim);
   color: var(--muted);
 }
 
@@ -366,11 +457,15 @@ textarea, input[type="email"] {
 }
 textarea:focus, input[type="email"]:focus { border-color: var(--accent); outline: none; }
 
-.field-scope { min-height: 20rem; }
+/* Tall enough to look like it wants a whole agreement, short enough that the
+   field and the button under it share one screen — the paste is a scroll either
+   way, but a visitor who cannot see "Next" reads the screen as unfinished. */
+.field-scope { min-height: 13rem; padding-bottom: 3rem; }
 .field-request { min-height: 10rem; }
 
-/* Only the counter lives here — every button sits in the action row, so the
-   primary action stays close to the field it acts on. */
+/* The action row keeps every real button, so the primary action stays close to
+   the field it acts on. The foot holds field furniture only: the counter, in
+   mono so the line reads as a caption rather than as a second row of actions. */
 .field-foot {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
   gap: 1rem; margin: 0.75rem 0 0.5rem;
@@ -378,12 +473,43 @@ textarea:focus, input[type="email"]:focus { border-color: var(--accent); outline
 .counter { font: 400 12px/1 var(--mono); color: var(--muted); }
 .counter.is-over { color: var(--stop); }
 
+/* The paperclip sits in the field's own bottom-left corner rather than in the
+   foot: it acts on the field, and the extra padding-bottom above keeps the text
+   off it. It is an accent-washed chip — opaque, so a scrolled agreement passes
+   behind it instead of through it, and coloured because in the corner of an
+   empty dark field a muted grey label reads as a caption, not as something to
+   press. It stops short of the right corner so the resize grip stays reachable.
+   The wash is the only fill on this screen besides the primary button, and it
+   sits two steps below it in weight: colour enough to be found, not enough to
+   compete with "Next". */
+.field-wrap { position: relative; }
+.attach {
+  position: absolute; left: 0.7rem; bottom: 0.7rem; max-width: calc(100% - 3rem);
+  display: flex; align-items: center; gap: 0.75rem; min-width: 0;
+  background: var(--accent-wash); border: 1px solid var(--accent-dim);
+  border-radius: 8px; padding: 0.4rem 0.6rem;
+}
+.field-wrap:has(textarea.is-drop) .attach { border-color: var(--accent); }
+.attach__btn {
+  display: inline-flex; align-items: center; gap: 0.4rem; flex: none;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: 400 12px/1 var(--mono); color: var(--accent-2);
+}
+.attach__btn:hover { color: var(--text); }
+.attach__btn svg { width: 14px; height: 14px; }
+/* The file name stays muted: it is what happened, not what to press. */
+.attach__name {
+  font: 400 12px/1.2 var(--mono); color: var(--muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Dropping a file on a textarea otherwise navigates the tab to it, taking the
+   pasted agreement with it — so the field takes the drop and says it will. */
+textarea.is-drop { border-color: var(--accent); background: var(--bg-raised); }
+
 /* The line is reserved whether or not there is an error: a message that pushes
    the button down as it appears moves the target mid-click. */
 .error { color: var(--stop); font-size: 0.92rem; line-height: 1.2; margin: 0 0 0.75rem; min-height: 1.2em; }
-
-/* Privacy line sits ABOVE the field, before anything is pasted. */
-.privacy-inline { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.6rem; }
 
 .scope-recap {
   background: var(--bg-raised);
@@ -396,6 +522,70 @@ textarea:focus, input[type="email"]:focus { border-color: var(--accent); outline
 .scope-recap summary::before { content: "▸ "; }
 .scope-recap[open] summary::before { content: "▾ "; }
 .scope-recap textarea { margin-top: 1rem; min-height: 14rem; }
+
+/* ---------- Hidden cost ---------- */
+/* One argument in one column: the story, then the numbers that back it, then
+   the line that says what to do about it. Nothing sits beside the headline.
+   The headline is held to two lines: one sentence and one price, where three
+   lines read as three separate thoughts. */
+.cost h2 { max-width: 30rem; margin-bottom: 3rem; text-wrap: balance; }
+
+/* The rule is the page gradient rather than flat --accent: it is decoration
+   here, and flat violet next to the magenta headline read as a fourth colour. */
+.story {
+  background: var(--gradient) left top / 3px 100% no-repeat;
+  padding: 0.25rem 0 0.25rem 1.6rem;
+  margin: 0 0 3rem;
+  max-width: 52rem;
+}
+.story blockquote { margin: 0 0 1.5rem; font-size: 1.15rem; font-style: italic; }
+.story p { margin: 0; color: var(--muted); }
+
+/* The dividers are the 1px grid gap showing the container's background, not
+   borders on the cells: with auto-fit the column count is unknown, and this
+   way a wrapped row gets its rule for free and no cell ends with a stray one. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.stat { background: var(--bg-raised); padding: 2rem; }
+/* The figures carry .grad-text in the markup — same gradient as the headline
+   and the logo. Colour never means anything here; the verdict statuses are
+   still the only place where it does. */
+.stat__figure {
+  font-weight: 700; letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4.5vw, 3rem); line-height: 1;
+  margin-bottom: 1rem;
+}
+.stat__body { margin: 0 0 1rem; }
+.stat__source {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin: 0;
+  color: var(--placeholder); font-size: 0.85rem; line-height: 1.4;
+}
+
+/* A source line people can question without the page having to explain itself
+   out loud. Native title tooltip — no JS, and it reads out as an abbreviation. */
+.hint {
+  flex: none;
+  width: 1.05rem; height: 1.05rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; line-height: 1;
+  color: var(--muted);
+  text-decoration: none;
+  cursor: help;
+}
+.hint:hover { color: var(--text); border-color: var(--accent-dim); }
+
+.cost__close { color: var(--muted); max-width: 34rem; margin: 2.5rem 0 0; }
+.cost__close b { color: var(--text); }
 
 /* ---------- Cost calculator ---------- */
 /* The card is as tall as its content; nothing here should be vertically

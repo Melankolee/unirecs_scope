@@ -43,6 +43,7 @@ The spec calls for 15–20 before launch; five ship in the repo.
 | `src/db.js` | The one table, plus the one-check-per-visitor rule |
 | `public/` | Landing, tool, privacy, terms — no build step |
 | `public/js/i18n.js` | EN/RU strings and the header switcher |
+| `public/js/attach.js` | Turns an attached `.docx`/`.txt`/`.md` into text, in the browser, without a library |
 | `fixtures/cases.json` | Prompt regression cases |
 | `deploy/` | systemd unit, nginx config, nightly dump |
 
@@ -53,11 +54,16 @@ system fallback, so a blocked CDN costs the page its typeface and nothing else.
 
 ## The privacy promise is load-bearing
 
-The landing page says the pasted text is not stored. That has to stay true:
+`privacy.html` says the pasted text is not stored. The rest of the interface
+deliberately stays quiet about it (spec §0), which changes nothing here — the
+promise is still made, and it has to stay true:
 
 - `scope` and `request` never reach the database — only their lengths do
 - neither reaches the logs; `src/routes/api.js` logs lengths and verdicts only
 - `sql/001_init.sql` has no column that could hold them
+- an attached file is opened in the browser and never uploaded — `public/js/attach.js`
+  sends nothing; only the extracted text goes into the field, and the file name
+  goes nowhere at all
 
 If you add a log line, a debug dump, or an error report, check that the text
 isn't riding along inside it.

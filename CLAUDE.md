@@ -20,8 +20,14 @@ npm run prompt:try   # run the prompt against fixtures/cases.json
 ## Rules that aren't obvious from the code
 
 **Never let `scope` or `request` reach storage.** Not the database, not the logs,
-not an error report. The landing page promises this and the promise is part of
-the product — people are pasting client contracts. Only lengths are kept.
+not an error report. Only lengths are kept. That extends to the paperclip on
+screen 1: `public/js/attach.js` opens the file in the browser, only the text it
+yields goes anywhere, and the file name is shown back but never sent — not to the
+server, not into an analytics event. The interface no longer says so
+anywhere except `privacy.html` — that was a deliberate call (spec §0: a page that
+answers "is this dangerous?" up front asks the question for you). The rule does
+not depend on the copy: the privacy notice still promises it, and people are
+pasting client contracts.
 
 **The email gate stays before the verdict.** An address given for value already
 received measures something other than what this test measures. Don't "improve"

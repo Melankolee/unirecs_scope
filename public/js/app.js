@@ -5,6 +5,8 @@
     limits: { scopeMin: 200, scopeMax: 15000, requestMin: 20, requestMax: 3000 },
     leadId: null,
     exampleUsed: false,
+    attachedName: null,
+    attachUsed: false,
     verdict: null,
     priceLimited: false,
     waitTimers: [],
@@ -32,6 +34,48 @@
     }
     input.addEventListener('input', update);
     update();
+  }
+
+  /* ---------- attachment ----------
+   *
+   * The agreement usually exists as a file, and retyping it is where the check
+   * gets abandoned. SG.readDocument turns the file into text in the browser;
+   * nothing but that text reaches the field, and nothing but the field is ever
+   * sent. The file name is shown back but never travels — not to the server and
+   * not into an analytics event, where "Contract — Acme Ltd.docx" would be the
+   * client's name in a report. */
+
+  function renderAttached() {
+    $('attach-name').textContent = state.attachedName
+      ? SG.t('app.attach.added', { name: state.attachedName })
+      : '';
+  }
+
+  function attach(file) {
+    if (!file) return;
+    var input = $('scope-input');
+
+    $('scope-error').textContent = '';
+    state.attachedName = null;
+    $('attach-name').textContent = SG.t('app.attach.reading', { name: file.name });
+
+    SG.readDocument(file).then(function (text) {
+      // Appended, not substituted: someone who has already pasted one document
+      // is adding a second, and losing the first to a click would be worse than
+      // a field they have to tidy.
+      var current = input.value.trim();
+      input.value = current ? current + '\n\n' + text : text;
+      input.dispatchEvent(new Event('input'));
+
+      state.attachedName = file.name;
+      state.attachUsed = true;
+      renderAttached();
+      SG.track('attachment_used', { kind: file.name.split('.').pop().toLowerCase() });
+    }).catch(function (err) {
+      renderAttached();
+      $('scope-error').textContent = SG.t(err.key || 'app.attach.err.read', err.params);
+      SG.track('attachment_error', { reason: err.key || 'unknown' });
+    });
   }
 
   function localValidate(value, min, max, whatKey) {
@@ -231,6 +275,48 @@
     SG.track('example_used', { field: 'request' });
   });
 
+  $('attach-btn').addEventListener('click', function () {
+    $('attach-input').click();
+  });
+
+  $('attach-input').addEventListener('change', function () {
+    attach(this.files[0]);
+    // Cleared so the same file picked twice still fires a change event.
+    this.value = '';
+  });
+
+  /* Dragging the contract onto the field is the same gesture as the paperclip,
+     and the browser's own handling of a dropped file — navigate away to it —
+     would throw away whatever is already in the field. Text drops are left
+     alone: dropping selected text into a textarea already does the right
+     thing. */
+  (function () {
+    var field = $('scope-input');
+    var carriesFile = function (event) {
+      var types = event.dataTransfer && event.dataTransfer.types;
+      return !!types && Array.prototype.indexOf.call(types, 'Files') !== -1;
+    };
+
+    ['dragenter', 'dragover'].forEach(function (name) {
+      field.addEventListener(name, function (event) {
+        if (!carriesFile(event)) return;
+        event.preventDefault();
+        field.classList.add('is-drop');
+      });
+    });
+
+    ['dragleave', 'dragend'].forEach(function (name) {
+      field.addEventListener(name, function () { field.classList.remove('is-drop'); });
+    });
+
+    field.addEventListener('drop', function (event) {
+      if (!carriesFile(event)) return;
+      event.preventDefault();
+      field.classList.remove('is-drop');
+      attach(event.dataTransfer.files[0]);
+    });
+  })();
+
   $('scope-next').addEventListener('click', function () {
     var value = $('scope-input').value;
     var error = localValidate(value, state.limits.scopeMin, state.limits.scopeMax, 'app.what.scope');
@@ -239,7 +325,7 @@
 
     $('scope-recap-input').value = value;
     show('screen-request');
-    SG.track('scope_filled', { used_example: state.exampleUsed });
+    SG.track('scope_filled', { used_example: state.exampleUsed, used_attachment: state.attachUsed });
   });
 
   $('back-to-scope').addEventListener('click', function () {
@@ -347,6 +433,7 @@
      to rebuild them or half the screen stays in the old language. */
   SG.onLang(function () {
     if (state.verdict) renderVerdict(state.verdict);
+    renderAttached();
     renderPrice();
   });
 
