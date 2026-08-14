@@ -309,8 +309,23 @@ a.btn-block { display: block; }
 .feature__list li:nth-child(1)::before { background: var(--accent-3); }
 .feature__list li:nth-child(2)::before { background: var(--accent-2); }
 
+/* Both cards describe the version after this one, so each ends on a line that
+   says so. Quieter than the body copy and set off by a rule: the promise above
+   stays legible, the correction is not something the eye can skip. On the left
+   card it also introduces the button, which still leads into the tool. */
+.feature__soon {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 1.1rem;
+  margin-top: auto;
+  margin-bottom: 1.4rem;
+  color: var(--placeholder);
+  font-size: 0.9rem;
+}
+/* The right card has no button under it. */
+.feature__soon:last-child { margin-bottom: 0; }
 /* Pinned to the bottom edge so the button sits on one line across both cards
-   however long the copy runs. */
+   however long the copy runs. (The note above it takes the pin when present —
+   `margin-top: auto` on the first of the two is what pushes the pair down.) */
 .feature .btn-primary { margin-top: auto; align-self: flex-start; }
 
 /* The two sample requests reuse .message: same sunken block, same label. The
@@ -756,9 +771,9 @@ textarea.is-drop { border-color: var(--accent); background: var(--bg-raised); }
   max-width: var(--page); margin: 0 auto; padding: 2rem;
   border-top: 1px solid var(--border-soft);
   font: 400 12px/1.8 var(--mono); letter-spacing: 0.06em; color: var(--muted);
-  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
 }
-.footer nav { display: flex; gap: 1.5rem; }
+.footer nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
 .footer a { color: var(--muted); border-bottom-color: var(--border); }
 .footer a:hover { color: var(--text); }
 

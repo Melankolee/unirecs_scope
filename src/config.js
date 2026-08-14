@@ -30,6 +30,10 @@ export const config = {
   // path of every pasted contract — see the privacy promise in §7.
   baseUrl: process.env.OPENAI_BASE_URL || '',
 
+  // Free checks per visitor, matched on (email, cookie). Never stated in the
+  // interface, so it moves without touching a single string.
+  freeChecks: int('FREE_CHECKS', 5),
+
   dailyCheckCap: int('DAILY_CHECK_CAP', 300),
   // Deliberately null until someone fills in the real tariff. A wrong default
   // here doesn't produce a wrong number in one log line — it produces a wrong

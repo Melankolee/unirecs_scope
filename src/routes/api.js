@@ -6,7 +6,7 @@ import { rateLimit } from '../rateLimit.js';
 import { cleanMarks, validateEmail, validateInputs } from '../validate.js';
 import {
   checksToday,
-  hasUsedCheck,
+  checksUsed,
   insertLead,
   leadBelongsToVisitor,
   markFlag,
@@ -57,8 +57,9 @@ api.post('/lead', rateLimit({ max: 8 }), async (req, res) => {
   if (!ok) return res.status(400).json({ error });
 
   try {
-    if (await hasUsedCheck({ email, visitorId: vid })) {
-      log({ level: 'info', at: 'lead', outcome: 'limited' });
+    const used = await checksUsed({ email, visitorId: vid });
+    if (used >= config.freeChecks) {
+      log({ level: 'info', at: 'lead', outcome: 'limited', used });
       return res.json({ limited: true });
     }
 

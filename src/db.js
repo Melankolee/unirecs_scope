@@ -16,27 +16,28 @@ export function query(text, params) {
 }
 
 /**
- * A visitor gets one free check. Enforced on the pair (email, cookie) — either
- * side matching a lead that already produced a verdict closes the door.
+ * How many free checks a visitor has already spent. Counted on the pair
+ * (email, cookie) — a lead matching either side and carrying a verdict counts.
+ * The allowance itself lives in `config.freeChecks`; the interface never names
+ * a number, so changing it is a config change and nothing else.
  * Incognito walks around this, and that is fine: the point is the API budget,
  * not the paywall.
  */
-export async function hasUsedCheck({ email, visitorId }) {
+export async function checksUsed({ email, visitorId }) {
   const { rows } = await query(
-    `SELECT 1
+    `SELECT count(*)::int AS n
        FROM leads_scopeguard
       WHERE verdict IS NOT NULL
-        AND (lower(email) = lower($1) OR ($2::text IS NOT NULL AND visitor_id = $2))
-      LIMIT 1`,
+        AND (lower(email) = lower($1) OR ($2::text IS NOT NULL AND visitor_id = $2))`,
     [email, visitorId || null],
   );
-  return rows.length > 0;
+  return rows[0].n;
 }
 
 /**
  * `source` says which form the address came from: 'gate' (before a verdict) or
  * 'access' (the landing page's waitlist). A landing row never gets a verdict,
- * so it is invisible to `hasUsedCheck` above and costs the visitor nothing.
+ * so it is invisible to `checksUsed` above and costs the visitor nothing.
  */
 export async function insertLead({ email, visitorId, marks, source = 'gate' }) {
   const { rows } = await query(

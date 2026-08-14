@@ -159,8 +159,9 @@ exporting them, so `dump.sh` — a separate process — starts with no
 
 - [ ] Run `npm run migrate` and walk the whole flow against a real Postgres —
       the database path is the least exercised part of this repo
-- [ ] Fill all eleven `[PLACEHOLDER]` spots in `public/privacy.html` and
-      `public/terms.html`, and have both read by someone qualified
+- [ ] Fill the eight remaining `[PLACEHOLDER]` spots in `public/privacy.html` and
+      `public/terms.html`, and have both read by someone qualified. The three
+      contact-email spots are filled: `scope@agent-studio.store`
 - [ ] Decide whether the API proxy stays in production. If it does, name it in
       the privacy notice as a second processor; if not, delete that block and
       point `OPENAI_BASE_URL` at the provider directly
