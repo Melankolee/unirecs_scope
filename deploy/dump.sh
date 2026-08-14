@@ -2,8 +2,11 @@
 # Daily dump of the leads table.
 #
 # Losing the data in week three means losing the test, so this runs from cron
-# rather than being something anyone has to remember:
-#   15 3 * * * /srv/scopeguard/deploy/dump.sh >> /var/log/scopeguard-dump.log 2>&1
+# rather than being something anyone has to remember — see /etc/cron.d/scopeguard.
+#
+# Whatever invokes it has to *export* DATABASE_URL. Plain `. .env` does not:
+# it sets shell variables, and this script is a separate process that never
+# sees them. Hence `set -a` around the source in the cron line.
 
 set -euo pipefail
 

@@ -45,7 +45,8 @@ The spec calls for 15–20 before launch; five ship in the repo.
 | `public/js/i18n.js` | EN/RU strings and the header switcher |
 | `public/js/attach.js` | Turns an attached `.docx`/`.txt`/`.md` into text, in the browser, without a library |
 | `fixtures/cases.json` | Prompt regression cases |
-| `deploy/` | systemd unit, nginx config, nightly dump |
+| `deploy/` | systemd unit, nginx config, deploy script, nightly dump |
+| `.github/workflows/deploy.yml` | Push to `main` → SSH → `deploy/deploy.sh` |
 
 The whole front end is plain HTML, CSS, and ES5-flavoured JS served statically.
 There is nothing to compile. One thing does come from outside: the Satoshi
@@ -70,11 +71,49 @@ isn't riding along inside it.
 
 ## Deploying
 
-Ubuntu VPS, Node 20+, Postgres, nginx in front for TLS.
+Production is `scopeguard.anytoolai.store` — an Ubuntu 24.04 VPS running Node 20,
+Postgres 16 and nginx, with the app in `/srv/scopeguard` under a system user of
+the same name. The box also serves an unrelated site, which is why the nginx
+config avoids touching anything it did not create.
+
+Every push to `main` deploys itself: `.github/workflows/deploy.yml` opens an SSH
+session and runs `deploy/deploy.sh` with the pushed commit. The script is the
+whole deploy — fetch, `npm ci --omit=dev`, `npm run migrate`, restart, then poll
+`/healthz` and put the previous commit back if it never answers. Nothing about
+it needs CI: the same line run by hand does the same thing, which matters on the
+day GitHub is the thing that's down.
+
+```sh
+sudo -u scopeguard /srv/scopeguard/deploy/deploy.sh          # latest origin/main
+sudo -u scopeguard /srv/scopeguard/deploy/deploy.sh <sha>    # a specific commit
+```
+
+CI runs the `deploy.sh` already on the server, which then checks out the pushed
+commit — so a change to the script itself takes effect on the *next* deploy.
+Run it by hand once when that matters.
+
+The rollback restores code, not schema. Migrations here only add things
+(`sql/*.sql`, all `IF NOT EXISTS`), so the older revision runs happily against
+the newer schema. A migration that drops or renames a column breaks that and
+needs its own plan.
+
+CI reaches the box as `scopeguard`, not root: a key in `~scopeguard/.ssh/`, and
+`/etc/sudoers.d/scopeguard` granting exactly `systemctl restart|is-active|status
+scopeguard`. Four repository secrets drive it:
+
+| Secret | Value |
+|---|---|
+| `DEPLOY_HOST` | the server's IP |
+| `DEPLOY_USER` | `scopeguard` |
+| `DEPLOY_KEY` | private half of the CI key |
+| `DEPLOY_HOST_KEY` | `ssh-keyscan -t ed25519 <ip>`, so the runner can't be pointed elsewhere |
+
+Setting the box up from nothing:
 
 ```sh
 # on the server, as root
 adduser --system --group --home /srv/scopeguard scopeguard
+usermod -s /bin/bash scopeguard          # the deploy session needs a shell
 # deploy the code to /srv/scopeguard, then:
 sudo -u scopeguard npm ci --omit=dev
 sudo -u scopeguard npm run migrate
@@ -82,10 +121,16 @@ sudo -u scopeguard npm run migrate
 cp deploy/scopeguard.service /etc/systemd/system/
 systemctl enable --now scopeguard
 
+certbot certonly --nginx -d scopeguard.anytoolai.store   # cert first, see nginx.conf
 cp deploy/nginx.conf /etc/nginx/sites-available/scopeguard
 ln -s /etc/nginx/sites-available/scopeguard /etc/nginx/sites-enabled/
-certbot --nginx -d scopeguard.example.com
+nginx -t && systemctl reload nginx
 ```
+
+`/srv/scopeguard` is both the checkout and the deploy user's home, so `.env`,
+`dumps/` and `.ssh/authorized_keys` sit untracked inside it. That is why the
+deploy script resets but never cleans — a `git clean -fd` there locks the next
+deploy out of the server.
 
 The `.env` is written on the server and never deployed from a laptop:
 
@@ -99,11 +144,16 @@ Production differs from local in five values: `NODE_ENV=production`,
 `COOKIE_SECURE=1`, a real `DATABASE_URL`, a fresh `OPENAI_API_KEY`, and the
 `PRICE_*_PER_MTOK` tariff.
 
-Add the nightly dump to cron:
+The nightly dump runs from `/etc/cron.d/scopeguard`:
 
 ```
-15 3 * * * . /srv/scopeguard/.env && /srv/scopeguard/deploy/dump.sh >> /var/log/scopeguard-dump.log 2>&1
+SHELL=/bin/bash
+15 3 * * * scopeguard set -a; . /srv/scopeguard/.env; set +a; /srv/scopeguard/deploy/dump.sh >> /var/log/scopeguard-dump.log 2>&1
 ```
+
+`set -a` is not decoration. A bare `. .env` defines shell variables without
+exporting them, so `dump.sh` — a separate process — starts with no
+`DATABASE_URL` and refuses to run.
 
 ## Before the first deploy
 

@@ -1,0 +1,60 @@
+# Push to main and the server has it a minute later.
+#
+# The job does almost nothing itself: it opens an SSH session and runs
+# `deploy/deploy.sh` with the pushed commit. Keeping the steps on the server
+# means the deploy can also be run by hand from a laptop, and that this file
+# never has to be kept in sync with how the app is built.
+#
+# No third-party actions beyond `checkout` — which this job does not even need.
+# A deploy job holds credentials to the production box; every action added here
+# is another author who can reach it.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Two deploys at once would race on `git reset` and on the systemd restart.
+# Queue instead of cancelling: a cancelled deploy can leave the checkout on a
+# commit nobody asked for.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Open the tunnel
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_HOST_KEY: ${{ secrets.DEPLOY_HOST_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          # Pinned from a secret rather than accepted on sight: a runner that
+          # trusts whatever answers on port 22 hands the session to whoever
+          # answers.
+          printf '%s\n' "$DEPLOY_HOST_KEY" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy ${{ github.sha }}
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -i ~/.ssh/deploy \
+              -o UserKnownHostsFile=~/.ssh/known_hosts \
+              -o StrictHostKeyChecking=yes \
+              -o BatchMode=yes \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              "deploy/deploy.sh ${{ github.sha }}"
+
+      - name: Forget the key
+        if: always()
+        run: rm -f ~/.ssh/deploy
