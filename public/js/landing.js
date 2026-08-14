@@ -112,16 +112,14 @@
       return hit ? Number(hit.getAttribute(attr)) : fallback;
     }
 
-    function locale() { return SG.lang() === 'ru' ? 'ru-RU' : 'en-US'; }
-
     function decimal(n) {
-      return n.toFixed(1).replace(/\.0$/, '').replace('.', SG.lang() === 'ru' ? ',' : '.');
+      return n.toFixed(1).replace(/\.0$/, '');
     }
 
     /* $7,200 reads as an invoice; $7.2k reads as a loss. Below a thousand the
        shorthand stops being shorthand, so the plain number stays. */
     function money(n) {
-      if (n < 1000) return '$' + n.toLocaleString(locale());
+      if (n < 1000) return '$' + n.toLocaleString('en-US');
       var k = n / 1000;
       var rounded = k >= 10 ? String(Math.round(k)) : decimal(k);
       return '$' + rounded + SG.t('loss.thousands');
@@ -134,7 +132,7 @@
 
       $('loss-days').textContent = SG.t(SG.plural('loss.days', days), { n: days });
       $('loss-figure').textContent = money(lost);
-      $('loss-monthly').textContent = SG.t('loss.monthly', { n: Math.round(lost / 12).toLocaleString(locale()) });
+      $('loss-monthly').textContent = SG.t('loss.monthly', { n: Math.round(lost / 12).toLocaleString('en-US') });
       $('loss-weeks').textContent = SG.t('loss.weeks', { n: decimal(hours / HOURS_PER_WEEK) });
       $('loss-formula').textContent = SG.t('loss.formula', {
         hours: extraHours,
@@ -151,7 +149,8 @@
       for (var i = 0; i < days; i++) box.appendChild(document.createElement('span'));
     }
 
-    // Chip captions carry units, so they are rebuilt on a language switch too.
+    // Chip captions carry their units ("$40/hr", "~5 hrs"), so the caption is
+    // built here rather than sitting in the markup next to the bare number.
     function relabel(group, attr, key) {
       group.querySelectorAll('button').forEach(function (b) {
         b.textContent = SG.t(key, { n: b.getAttribute(attr) });
@@ -179,11 +178,9 @@
     bindChips(hoursChips, 'data-hours', function (v) { extraHours = v; });
     bindChips(projChips, 'data-proj', function (v) { projects = v; });
 
-    SG.onLang(function () {
-      relabel(rateChips, 'data-rate', 'loss.rateChip');
-      relabel(hoursChips, 'data-hours', 'loss.hoursChip');
-      renderLoss();
-    });
+    relabel(rateChips, 'data-rate', 'loss.rateChip');
+    relabel(hoursChips, 'data-hours', 'loss.hoursChip');
+    renderLoss();
   }
 
   /* ---------- verdict samples ---------- */

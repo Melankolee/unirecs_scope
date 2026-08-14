@@ -42,7 +42,7 @@ The spec calls for 15–20 before launch; five ship in the repo.
 | `src/routes/api.js` | `/api/lead`, `/api/access`, `/api/check`, `/api/event`, `/api/config` |
 | `src/db.js` | The one table, plus the one-check-per-visitor rule |
 | `public/` | Landing, tool, privacy, terms — no build step |
-| `public/js/i18n.js` | EN/RU strings and the header switcher |
+| `public/js/strings.js` | The strings the scripts build at runtime — everything else is in the markup |
 | `public/js/attach.js` | Turns an attached `.docx`/`.txt`/`.md` into text, in the browser, without a library |
 | `fixtures/cases.json` | Prompt regression cases |
 | `deploy/` | systemd unit, nginx config, deploy script, nightly dump |

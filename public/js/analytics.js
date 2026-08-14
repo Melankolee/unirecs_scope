@@ -102,30 +102,23 @@ window.SG = window.SG || {};
   SG.mountCookieBar = function () {
     if (consent() !== null) return;
 
+    // The bar has no markup to fall back on — it only exists when consent is
+    // still unanswered — so its copy is written here rather than in strings.js,
+    // where a key would just point back at this one caller.
     var bar = document.createElement('div');
     bar.className = 'cookie';
     bar.innerHTML =
       '<div class="cookie__inner">' +
-      '<span data-i18n="cookie.text"></span>' +
+      '<span>We use analytics cookies to see how many people finish a check. </span>' +
       '<div class="cookie__actions">' +
-      '<button class="btn-ghost" data-cookie="deny" data-i18n="cookie.decline"></button>' +
-      '<button class="btn-primary btn-primary--sm" data-cookie="accept" data-i18n="cookie.accept"></button>' +
+      '<button class="btn-ghost" data-cookie="deny">Decline</button>' +
+      '<button class="btn-primary btn-primary--sm" data-cookie="accept">Accept</button>' +
       '</div></div>';
 
     var link = document.createElement('a');
     link.href = '/privacy.html';
-
-    // The bar is built after i18n has already walked the document, so it fills
-    // itself in — and re-fills if the visitor switches language while it is up.
-    SG.onLang(function () {
-      bar.querySelectorAll('[data-i18n]').forEach(function (el) {
-        el.textContent = SG.t(el.getAttribute('data-i18n'));
-      });
-      link.textContent = SG.t('nav.privacy');
-      var text = bar.querySelector('span');
-      text.appendChild(document.createTextNode(' '));
-      text.appendChild(link);
-    });
+    link.textContent = 'Privacy';
+    bar.querySelector('span').appendChild(link);
 
     bar.addEventListener('click', function (event) {
       var action = event.target.getAttribute('data-cookie');

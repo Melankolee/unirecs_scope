@@ -3,9 +3,66 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-i18n="meta.title">Signalens — is that request actually in scope?</title>
-<meta name="description" data-i18n-attr="content" data-i18n="meta.description" content="Paste what you agreed to, paste the client's message, get a verdict and a reply you can send.">
+<title>Signalens — is that request actually in scope?</title>
+<meta name="description" content="Paste what you agreed to, paste the client's message, get a verdict and a reply you can send.">
+<link rel="canonical" href="https://scopeguard.anytoolai.store/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Signalens">
+<meta property="og:url" content="https://scopeguard.anytoolai.store/">
+<meta property="og:title" content="Signalens — is that request actually in scope?">
+<meta property="og:description" content="Paste what you agreed to, paste the client's message, get a verdict and a reply you can send.">
+<meta property="og:image" content="https://scopeguard.anytoolai.store/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Signalens — “Could you just quickly also…”, answered with an Out of scope verdict.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Signalens — is that request actually in scope?">
+<meta name="twitter:description" content="Paste what you agreed to, paste the client's message, get a verdict and a reply you can send.">
+<meta name="twitter:image" content="https://scopeguard.anytoolai.store/og.png">
+
+<meta name="theme-color" content="#14141a">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-96.png" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles.css">
+
+<!-- No price and no rating in here: the plan price lives in config until it is
+     agreed, and a rating nobody has collected is a lie a rich result repeats. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://scopeguard.anytoolai.store/#website",
+      "url": "https://scopeguard.anytoolai.store/",
+      "name": "Signalens",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://scopeguard.anytoolai.store/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://scopeguard.anytoolai.store/#org",
+      "name": "Signalens",
+      "url": "https://scopeguard.anytoolai.store/",
+      "logo": "https://scopeguard.anytoolai.store/apple-touch-icon.png"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Signalens",
+      "url": "https://scopeguard.anytoolai.store/",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "Check a client request against the terms you agreed to. Signalens returns a verdict — in scope, out of scope, or unclear — with the line it rests on and a reply you can send.",
+      "audience": { "@type": "Audience", "audienceType": "Freelancers, designers, developers, writers and consultants" },
+      "publisher": { "@id": "https://scopeguard.anytoolai.store/#org" }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -15,13 +72,7 @@
       <span class="logo-tile">S</span>
       <span>Signalens</span>
     </a>
-    <div class="row" style="gap:1.25rem">
-      <div class="lang" id="lang" role="group" aria-label="Language">
-        <button type="button" data-lang="en" aria-pressed="true">EN</button>
-        <button type="button" data-lang="ru" aria-pressed="false">RU</button>
-      </div>
-      <button class="btn-primary btn-primary--sm" type="button" data-access data-cta="header" data-i18n="cta.access">Get access</button>
-    </div>
+    <button class="btn-primary btn-primary--sm" type="button" data-access data-cta="header">Get access</button>
   </div>
 </header>
 
@@ -31,31 +82,31 @@
   <section class="section">
     <div class="wrap cols-2">
       <div class="hero">
-        <p class="eyebrow" data-i18n="hero.eyebrow">For freelancers</p>
-        <h1 data-i18n-html="hero.title">“Could you just <span class="grad-text">quickly also…</span>”</h1>
-        <p class="lead" data-i18n="hero.lead">
+        <p class="eyebrow">For freelancers</p>
+        <h1>“Could you just <span class="grad-text">quickly also…</span>”</h1>
+        <p class="lead">
           Two “quick” extras a month is a week of unpaid work a year. Paste what you
           agreed to, paste the message that just arrived, and find out where the
           request actually stands — with a reply you can send as it is.
         </p>
         <div class="actions">
-          <a class="btn-primary btn-primary--grad" href="/app.html" data-cta="hero" data-i18n="cta.try">Try a free check</a>
-          <span class="muted small" data-i18n="hero.note">Free · no account · about a minute</span>
+          <a class="btn-primary btn-primary--grad" href="/app.html" data-cta="hero">Try a free check</a>
+          <span class="muted small">Free · no account · about a minute</span>
         </div>
       </div>
 
       <div class="card card--float">
         <div class="message">
-          <div class="message__head"><span class="label" data-i18n="hero.sampleRequestLabel">Client request</span></div>
-          <p data-i18n="hero.sampleRequest">“Can you do one more round on the pricing page?”</p>
+          <div class="message__head"><span class="label">Client request</span></div>
+          <p>“Can you do one more round on the pricing page?”</p>
         </div>
-        <div class="verdict__status verdict__status--badge is-out_of_scope" data-i18n="verdict.out_of_scope">Out of scope</div>
-        <p class="muted" data-i18n="hero.sampleReasoning">
+        <div class="verdict__status verdict__status--badge is-out_of_scope">Out of scope</div>
+        <p class="muted">
           Three rounds are covered. All three are used.
         </p>
         <div class="reply">
-          <div class="reply__head"><span class="label" data-i18n="reply.label">Reply to the client</span></div>
-          <p data-i18n="hero.sampleReply">Happy to take another look — our agreement covers three rounds and we wrapped the third last week, so I’d quote this fourth one separately.</p>
+          <div class="reply__head"><span class="label">Reply to the client</span></div>
+          <p>Happy to take another look — our agreement covers three rounds and we wrapped the third last week, so I’d quote this fourth one separately.</p>
         </div>
       </div>
     </div>
@@ -65,9 +116,9 @@
   <section class="section band-deep">
     <div class="wrap cols-2 calc">
       <div>
-        <h2 data-i18n="loss.title">What is scope creep costing you a year?</h2>
+        <h2>What is scope creep costing you a year?</h2>
 
-        <p class="calc__label" id="rate-label" data-i18n="loss.rateLabel">Your hourly rate</p>
+        <p class="calc__label" id="rate-label">Your hourly rate</p>
         <div class="chips" id="rate-chips" role="group" aria-labelledby="rate-label">
           <button type="button" data-rate="15" aria-pressed="false">$15/hr</button>
           <button type="button" data-rate="25" aria-pressed="false">$25/hr</button>
@@ -77,7 +128,7 @@
           <button type="button" data-rate="125" aria-pressed="false">$125/hr</button>
         </div>
 
-        <p class="calc__label" id="hours-label" data-i18n="loss.hoursLabel">Extra hours a client pulls out of you per project</p>
+        <p class="calc__label" id="hours-label">Extra hours a client pulls out of you per project</p>
         <div class="chips" id="hours-chips" role="group" aria-labelledby="hours-label">
           <button type="button" data-hours="1" aria-pressed="false">~1 hrs</button>
           <button type="button" data-hours="3" aria-pressed="false">~3 hrs</button>
@@ -86,7 +137,7 @@
           <button type="button" data-hours="20" aria-pressed="false">~20 hrs</button>
         </div>
 
-        <p class="calc__label" id="proj-label" data-i18n="loss.projectsLabel">Projects per month</p>
+        <p class="calc__label" id="proj-label">Projects per month</p>
         <div class="chips" id="proj-chips" role="group" aria-labelledby="proj-label">
           <button type="button" data-proj="1" aria-pressed="false">1</button>
           <button type="button" data-proj="2" aria-pressed="false">2</button>
@@ -101,14 +152,14 @@
         <p class="loss__days" id="loss-days">23 unpaid work days this year</p>
         <div class="loss__dots" id="loss-dots" aria-hidden="true"></div>
 
-        <p class="loss__intro" data-i18n="loss.intro">You are handing over roughly</p>
+        <p class="loss__intro">You are handing over roughly</p>
         <p class="loss__figure" id="loss-figure">$7.2k</p>
         <div class="loss__row">
           <span class="loss__chip" id="loss-monthly">$600 a month</span>
           <span class="muted" id="loss-weeks">4.5 work weeks a year, unbilled</span>
         </div>
         <p class="loss__formula" id="loss-formula">~5 hrs × 3 proj/mo × 12 × $40/hr</p>
-        <a class="btn-primary btn-primary--light btn-block" href="/app.html" data-cta="calculator" data-i18n="loss.cta">Start billing for them</a>
+        <a class="btn-primary btn-primary--light btn-block" href="/app.html" data-cta="calculator">Start billing for them</a>
       </div>
     </div>
   </section>
@@ -116,23 +167,23 @@
   <!-- ── How it works ──────────────────────────────────────────────── -->
   <section class="section">
     <div class="wrap">
-      <p class="eyebrow" data-i18n="how.eyebrow">How it works</p>
-      <h2 data-i18n="how.title">Three steps, about a minute</h2>
+      <p class="eyebrow">How it works</p>
+      <h2>Three steps, about a minute</h2>
       <div class="cards" style="margin-top:3rem">
         <div class="card step">
           <div class="step__num">01</div>
-          <h3 data-i18n="how.s1.title">Paste what you agreed to</h3>
-          <p class="muted" data-i18n="how.s1.body">The contract, the SOW, the proposal they accepted, or the thread where you settled the details.</p>
+          <h3>Paste what you agreed to</h3>
+          <p class="muted">The contract, the SOW, the proposal they accepted, or the thread where you settled the details.</p>
         </div>
         <div class="card step">
           <div class="step__num">02</div>
-          <h3 data-i18n="how.s2.title">Paste the client’s message</h3>
-          <p class="muted" data-i18n="how.s2.body">The one that starts with “small thing” and ends with three days of work.</p>
+          <h3>Paste the client’s message</h3>
+          <p class="muted">The one that starts with “small thing” and ends with three days of work.</p>
         </div>
         <div class="card step">
           <div class="step__num">03</div>
-          <h3 data-i18n="how.s3.title">Get the verdict and the reply</h3>
-          <p class="muted" data-i18n="how.s3.body">In scope, out of scope, or genuinely unclear — with the exact line it rests on, and wording you can send.</p>
+          <h3>Get the verdict and the reply</h3>
+          <p class="muted">In scope, out of scope, or genuinely unclear — with the exact line it rests on, and wording you can send.</p>
         </div>
       </div>
     </div>
@@ -141,72 +192,72 @@
   <!-- ── What a verdict looks like ─────────────────────────────────── -->
   <section class="section band-deep">
     <div class="wrap">
-      <p class="eyebrow" data-i18n="sample.eyebrow">What you get</p>
-      <h2 data-i18n="sample.title">All three answers, not just the one you hoped for</h2>
-      <p class="lead" style="margin-bottom:2.5rem" data-i18n="sample.lead">
+      <p class="eyebrow">What you get</p>
+      <h2>All three answers, not just the one you hoped for</h2>
+      <p class="lead" style="margin-bottom:2.5rem">
         Real verdicts, so you know what you’re getting before you paste anything.
       </p>
 
       <div class="tabs" id="sample-tabs" role="tablist">
-        <button type="button" role="tab" class="is-in_scope" data-sample="in_scope" aria-selected="false" data-i18n="verdict.in_scope">In scope</button>
-        <button type="button" role="tab" class="is-unclear" data-sample="unclear" aria-selected="false" data-i18n="verdict.unclear">Unclear</button>
-        <button type="button" role="tab" class="is-out_of_scope" data-sample="out_of_scope" aria-selected="true" data-i18n="verdict.out_of_scope">Out of scope</button>
+        <button type="button" role="tab" class="is-in_scope" data-sample="in_scope" aria-selected="false">In scope</button>
+        <button type="button" role="tab" class="is-unclear" data-sample="unclear" aria-selected="false">Unclear</button>
+        <button type="button" role="tab" class="is-out_of_scope" data-sample="out_of_scope" aria-selected="true">Out of scope</button>
       </div>
 
       <!-- in scope -->
       <div class="card" data-sample-panel="in_scope" hidden>
-        <div class="verdict__status is-in_scope" data-i18n="verdict.in_scope">In scope</div>
-        <p data-i18n="sample.in_scope.reasoning">
+        <div class="verdict__status is-in_scope">In scope</div>
+        <p>
           The agreement lists the Contact page among the five agreed designs, and
           swapping the form fields is part of designing it. This is covered work.
         </p>
-        <blockquote class="evidence" data-i18n="sample.in_scope.evidence">
+        <blockquote class="evidence">
           “Responsive designs for five (5) pages: Home, Shop, Product Detail, About, and Contact.”
         </blockquote>
         <div class="reply">
-          <div class="reply__head"><span class="label" data-i18n="reply.label">Reply to the client</span></div>
-          <p data-i18n="sample.in_scope.reply">Yes, that’s covered — the Contact page is one of the five in our agreement, and the field changes are part of designing it. I’ll fold it into the current round and you’ll see it in the next hand-off.</p>
+          <div class="reply__head"><span class="label">Reply to the client</span></div>
+          <p>Yes, that’s covered — the Contact page is one of the five in our agreement, and the field changes are part of designing it. I’ll fold it into the current round and you’ll see it in the next hand-off.</p>
         </div>
       </div>
 
       <!-- unclear -->
       <div class="card" data-sample-panel="unclear" hidden>
-        <div class="verdict__status is-unclear" data-i18n="verdict.unclear">Unclear</div>
-        <p data-i18n="sample.unclear.reasoning">
+        <div class="verdict__status is-unclear">Unclear</div>
+        <p>
           The agreement covers the five page designs but says nothing about a mobile
           app screen. It is neither included nor excluded — the terms are silent,
           which is a different answer from “no”.
         </p>
-        <div class="low-confidence" data-i18n="sample.unclear.note">
+        <div class="low-confidence">
           Low confidence — the terms genuinely read more than one way here. Treat this
           as a starting point for the conversation, not a settled answer.
         </div>
         <div class="reply">
-          <div class="reply__head"><span class="label" data-i18n="reply.label">Reply to the client</span></div>
-          <p data-i18n="sample.unclear.reply">Good question, and honestly our agreement doesn’t say either way — it lists five web pages and stops there. Before I start, can we agree whether the app screen sits inside this phase or becomes its own small piece of work?</p>
+          <div class="reply__head"><span class="label">Reply to the client</span></div>
+          <p>Good question, and honestly our agreement doesn’t say either way — it lists five web pages and stops there. Before I start, can we agree whether the app screen sits inside this phase or becomes its own small piece of work?</p>
         </div>
       </div>
 
       <!-- out of scope -->
       <div class="card" data-sample-panel="out_of_scope">
-        <div class="verdict__status is-out_of_scope" data-i18n="verdict.out_of_scope">Out of scope</div>
-        <p data-i18n="sample.out_of_scope.reasoning">
+        <div class="verdict__status is-out_of_scope">Out of scope</div>
+        <p>
           The agreement covers three rounds of revisions on the agreed page set, and
           the client has already used all three. A fourth round is new work, even
           though revisions themselves are covered.
         </p>
-        <blockquote class="evidence" data-i18n="sample.out_of_scope.evidence">
+        <blockquote class="evidence">
           “Includes up to three (3) rounds of revisions across the five agreed page
           designs. Additional rounds are quoted separately.”
         </blockquote>
         <div class="reply">
-          <div class="reply__head"><span class="label" data-i18n="reply.label">Reply to the client</span></div>
-          <p data-i18n="sample.out_of_scope.reply">Happy to take another look at the pricing page. Our agreement covers three rounds of revisions and we wrapped the third last week, so this would be a fourth — I can quote it as a small add-on, or roll it into the next phase if you’d rather keep everything together.</p>
+          <div class="reply__head"><span class="label">Reply to the client</span></div>
+          <p>Happy to take another look at the pricing page. Our agreement covers three rounds of revisions and we wrapped the third last week, so this would be a fourth — I can quote it as a small add-on, or roll it into the next phase if you’d rather keep everything together.</p>
         </div>
       </div>
 
       <div class="actions">
-        <a class="btn-primary" href="/app.html" data-cta="sample" data-i18n="sample.cta">Try now</a>
+        <a class="btn-primary" href="/app.html" data-cta="sample">Try now</a>
       </div>
     </div>
   </section>
@@ -214,48 +265,48 @@
   <!-- ── Two features ──────────────────────────────────────────────── -->
   <section class="section">
     <div class="wrap">
-      <p class="eyebrow" data-i18n="feat.eyebrow">What sets Signalens apart</p>
-      <h2 class="features__title" data-i18n="feat.title">Two features you’ll rely on every single day.</h2>
+      <p class="eyebrow">What sets Signalens apart</p>
+      <h2 class="features__title">Two features you’ll rely on every single day.</h2>
 
       <div class="cards cards--pair">
         <div class="card feature feature--deep">
           <div class="feature__head">
             <span class="feature__tile" aria-hidden="true"></span>
-            <span class="label" data-i18n="feat.sow.tag">Every plan · New</span>
+            <span class="label">Every plan · New</span>
           </div>
-          <h3 data-i18n="feat.sow.title">SOW Health &amp; Risk Report</h3>
-          <p class="muted" data-i18n="feat.sow.body">
+          <h3>SOW Health &amp; Risk Report</h3>
+          <p class="muted">
             When you upload a contract PDF, Signalens scores it against 10 industry
             standards — surfacing weak clauses, missing protections, and exact
             language to add before anything goes wrong.
           </p>
           <ul class="feature__list">
-            <li data-i18n="feat.sow.p1">Pinpoints high-risk gaps: no kill fee, vague deliverables, missing revision limits</li>
-            <li data-i18n="feat.sow.p2">Lists all protective clauses already present in your contract</li>
-            <li data-i18n="feat.sow.p3">Gives you exact clause language to add — copy and paste ready</li>
+            <li>Pinpoints high-risk gaps: no kill fee, vague deliverables, missing revision limits</li>
+            <li>Lists all protective clauses already present in your contract</li>
+            <li>Gives you exact clause language to add — copy and paste ready</li>
           </ul>
-          <a class="btn-primary btn-primary--light" href="/app.html" data-cta="feature_sow" data-i18n="feat.sow.cta">Try now</a>
+          <a class="btn-primary btn-primary--light" href="/app.html" data-cta="feature_sow">Try now</a>
         </div>
 
         <div class="card feature">
           <div class="feature__head">
             <span class="feature__tile feature__tile--soft" aria-hidden="true"></span>
-            <span class="label label--accent" data-i18n="feat.ctx.tag">Scope analysis · Smarter</span>
+            <span class="label label--accent">Scope analysis · Smarter</span>
           </div>
-          <h3 data-i18n="feat.ctx.title">Context-Aware Evaluation</h3>
-          <p class="muted" data-i18n="feat.ctx.body">
+          <h3>Context-Aware Evaluation</h3>
+          <p class="muted">
             Most tools only accept copy-paste. Signalens understands context — paste
             the client’s exact message or simply describe what they’re asking. Both
             get the same precision verdict.
           </p>
           <div class="message">
-            <div class="message__head"><span class="label" data-i18n="feat.ctx.exactLabel">Exact message</span></div>
-            <p data-i18n="feat.ctx.exact">“Can you also build a mobile app version?”</p>
+            <div class="message__head"><span class="label">Exact message</span></div>
+            <p>“Can you also build a mobile app version?”</p>
           </div>
-          <p class="feature__or" data-i18n="feat.ctx.or">or</p>
+          <p class="feature__or">or</p>
           <div class="message message--accent">
-            <div class="message__head"><span class="label" data-i18n="feat.ctx.ownLabel">Your own words</span></div>
-            <p data-i18n="feat.ctx.own">“Client is asking for a mobile app”</p>
+            <div class="message__head"><span class="label">Your own words</span></div>
+            <p>“Client is asking for a mobile app”</p>
           </div>
         </div>
       </div>
@@ -265,12 +316,12 @@
   <!-- ── The hidden cost ───────────────────────────────────────────── -->
   <section class="section band-deep cost">
     <div class="wrap">
-      <p class="eyebrow" data-i18n="cost.eyebrow">The hidden cost</p>
-      <h2 data-i18n="cost.title">One “small ask” just cost you $1,400.</h2>
+      <p class="eyebrow">The hidden cost</p>
+      <h2>One “small ask” just cost you $1,400.</h2>
 
       <div class="story">
-        <blockquote data-i18n-html="cost.story">“You finish the logo. The client says: <b>‘Can you also do the brand guidelines?’</b> You say yes — it’s just 2 more hours. Then comes the social kit. Then the pitch deck. You’ve worked 14 extra hours and invoiced for zero.”</blockquote>
-        <p data-i18n="cost.note">
+        <blockquote>“You finish the logo. The client says: <b>‘Can you also do the brand guidelines?’</b> You say yes — it’s just 2 more hours. Then comes the social kit. Then the pitch deck. You’ve worked 14 extra hours and invoiced for zero.”</blockquote>
+        <p>
           This is scope creep. It happens to every designer, developer, writer, and
           consultant — and most never bill for it. Not because they don’t want to.
           Because they don’t have the words.
@@ -279,35 +330,35 @@
 
       <div class="stats">
         <div class="stat">
-          <p class="stat__figure grad-text" data-i18n="cost.s1.figure">71%</p>
-          <p class="stat__body" data-i18n="cost.s1.body">of freelancers deal with scope creep on most projects</p>
+          <p class="stat__figure grad-text">71%</p>
+          <p class="stat__body">of freelancers deal with scope creep on most projects</p>
           <p class="stat__source">
-            <span data-i18n="cost.s1.source">AND CO Freelancer Report, 2019</span>
-            <abbr class="hint" data-i18n="cost.s1.note" data-i18n-attr="title"
+            <span>AND CO Freelancer Report, 2019</span>
+            <abbr class="hint"
                   title="Freelancers who reported that scope creep happens on most or all of their projects.">?</abbr>
           </p>
         </div>
         <div class="stat">
-          <p class="stat__figure grad-text" data-i18n="cost.s2.figure">63%</p>
-          <p class="stat__body" data-i18n="cost.s2.body">never invoice for the out-of-scope work they do</p>
+          <p class="stat__figure grad-text">63%</p>
+          <p class="stat__body">never invoice for the out-of-scope work they do</p>
           <p class="stat__source">
-            <span data-i18n="cost.s2.source">Freelancing in America, Upwork × Freelancers Union, 2019</span>
-            <abbr class="hint" data-i18n="cost.s2.note" data-i18n-attr="title"
+            <span>Freelancing in America, Upwork × Freelancers Union, 2019</span>
+            <abbr class="hint"
                   title="Of the freelancers who do work outside the agreement, the share who never bill for any of it.">?</abbr>
           </p>
         </div>
         <div class="stat">
-          <p class="stat__figure grad-text" data-i18n="cost.s3.figure">$9,000+</p>
-          <p class="stat__body" data-i18n="cost.s3.body">average annual loss from unbilled out-of-scope work</p>
+          <p class="stat__figure grad-text">$9,000+</p>
+          <p class="stat__body">average annual loss from unbilled out-of-scope work</p>
           <p class="stat__source">
-            <span data-i18n="cost.s3.source">est. based on BLS median rate × avg. extra hours</span>
-            <abbr class="hint" data-i18n="cost.s3.note" data-i18n-attr="title"
+            <span>est. based on BLS median rate × avg. extra hours</span>
+            <abbr class="hint"
                   title="An estimate, not a surveyed figure: a median hourly rate multiplied by the extra hours freelancers report giving away over a year.">?</abbr>
           </p>
         </div>
       </div>
 
-      <p class="cost__close" data-i18n-html="cost.close">Signalens spots it <b>before you say yes</b> — and gives you the exact words to respond.</p>
+      <p class="cost__close">Signalens spots it <b>before you say yes</b> — and gives you the exact words to respond.</p>
     </div>
   </section>
 
@@ -315,12 +366,12 @@
   <section class="section">
     <div class="wrap">
       <div class="card card--cta">
-        <h2 data-i18n="final.title">Check the message that’s sitting in your inbox</h2>
-        <p data-i18n="final.body">It takes about a minute, and you’ll have the reply written.</p>
+        <h2>Check the message that’s sitting in your inbox</h2>
+        <p>It takes about a minute, and you’ll have the reply written.</p>
         <p style="margin:1.5rem 0 0">
-          <a class="btn-invert" href="/app.html" data-cta="footer" data-i18n="cta.try">Try a free check</a>
+          <a class="btn-invert" href="/app.html" data-cta="footer">Try a free check</a>
         </p>
-        <p class="note" data-i18n="hero.note">Free · no account · about a minute</p>
+        <p class="note">Free · no account · about a minute</p>
       </div>
     </div>
   </section>
@@ -333,38 +384,38 @@
 <div class="gate" id="access" hidden>
   <div class="gate__box" role="dialog" aria-modal="true" aria-labelledby="access-title">
     <div id="access-form">
-      <h3 id="access-title" data-i18n="access.title">Where should we send your access?</h3>
-      <p class="muted small" data-i18n="access.body">
+      <h3 id="access-title">Where should we send your access?</h3>
+      <p class="muted small">
         Signalens is opening in batches. Leave your address and we’ll send you a way
         in. That’s the only thing we’ll use it for.
       </p>
       <input type="email" id="access-email" placeholder="you@studio.com" autocomplete="email" inputmode="email">
       <p class="error" id="access-error"></p>
-      <button class="btn-primary btn-primary--grad" id="access-submit" type="button" data-i18n="access.submit">Get access</button>
+      <button class="btn-primary btn-primary--grad" id="access-submit" type="button">Get access</button>
     </div>
 
     <div id="access-done" hidden>
-      <h3 data-i18n="access.done.title">You’re on the list</h3>
-      <p class="muted small" data-i18n="access.done.body">
+      <h3>You’re on the list</h3>
+      <p class="muted small">
         We’ll email you a way in when the next batch opens. Until then, one check is
         on us — no account needed.
       </p>
-      <a class="btn-primary btn-primary--grad" href="/app.html" data-cta="access_done" data-i18n="access.done.cta">Try a free check</a>
+      <a class="btn-primary btn-primary--grad" href="/app.html" data-cta="access_done">Try a free check</a>
     </div>
 
-    <p class="gate__exit"><button class="btn-quiet" id="access-close" type="button" data-i18n="access.close">Close</button></p>
+    <p class="gate__exit"><button class="btn-quiet" id="access-close" type="button">Close</button></p>
   </div>
 </div>
 
 <footer class="footer">
   <div>Signalens</div>
   <nav>
-    <a href="/privacy.html" data-i18n="nav.privacy">Privacy</a>
-    <a href="/terms.html" data-i18n="nav.terms">Terms</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
   </nav>
 </footer>
 
-<script src="/js/i18n.js"></script>
+<script src="/js/strings.js"></script>
 <script src="/js/analytics.js"></script>
 <script src="/js/landing.js"></script>
 </body>

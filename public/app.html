@@ -3,8 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-i18n="meta.appTitle">Check a client request — Signalens</title>
-<meta name="robots" content="noindex">
+<title>Check a client request — Signalens</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#14141a">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-96.png" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -15,10 +19,6 @@
       <span class="logo-tile">S</span>
       <span>Signalens</span>
     </a>
-    <div class="lang" id="lang" role="group" aria-label="Language">
-      <button type="button" data-lang="en" aria-pressed="true">EN</button>
-      <button type="button" data-lang="ru" aria-pressed="false">RU</button>
-    </div>
   </div>
 </header>
 
@@ -26,18 +26,18 @@
 
   <!-- ── Screen 1 — the agreed terms ───────────────────────────────── -->
   <section class="screen" id="screen-scope">
-    <p class="eyebrow" data-i18n="app.step1">Step 1 of 2</p>
-    <h2 style="margin:0.8rem 0 1rem" data-i18n="app.scope.title">Paste what you agreed to</h2>
-    <p class="lead" data-i18n="app.scope.body">
+    <p class="eyebrow">Step 1 of 2</p>
+    <h2 style="margin:0.8rem 0 1rem">Paste what you agreed to</h2>
+    <p class="lead">
       The contract, the SOW, the proposal they accepted, or the email thread where
       you settled the details. Whatever actually defines the work.
     </p>
     <div class="field-wrap">
-      <textarea class="field-scope" id="scope-input" data-i18n-ph="app.scope.placeholder" placeholder="Paste the agreement here…" spellcheck="false"></textarea>
+      <textarea class="field-scope" id="scope-input" placeholder="Paste the agreement here…" spellcheck="false"></textarea>
       <span class="attach">
         <button class="attach__btn" id="attach-btn" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5 12 20a5.5 5.5 0 0 1-7.8-7.8l8.6-8.5a3.6 3.6 0 0 1 5.1 5.1l-8.5 8.5a1.8 1.8 0 0 1-2.5-2.5l7.9-7.8"/></svg>
-          <span data-i18n="app.scope.attach">Attach a file</span>
+          <span>Attach a file</span>
         </button>
         <input type="file" id="attach-input" accept=".docx,.txt,.text,.md,.markdown,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
         <span class="attach__name" id="attach-name"></span>
@@ -49,32 +49,32 @@
     <p class="error" id="scope-error"></p>
 
     <div class="row">
-      <button class="btn-primary btn-primary--grad" id="scope-next" type="button" data-i18n="app.next">Next</button>
-      <button class="btn-quiet" id="use-example" type="button" data-i18n="app.scope.example">Don’t have it handy? Use an example</button>
+      <button class="btn-primary btn-primary--grad" id="scope-next" type="button">Next</button>
+      <button class="btn-quiet" id="use-example" type="button">Don’t have it handy? Use an example</button>
     </div>
   </section>
 
   <!-- ── Screen 2 — the client's message ───────────────────────────── -->
   <section class="screen" id="screen-request" hidden>
-    <p class="eyebrow" data-i18n="app.step2">Step 2 of 2</p>
-    <h2 style="margin:0.8rem 0 1.5rem" data-i18n="app.request.title">Paste the client’s message</h2>
+    <p class="eyebrow">Step 2 of 2</p>
+    <h2 style="margin:0.8rem 0 1.5rem">Paste the client’s message</h2>
 
     <details class="scope-recap">
-      <summary data-i18n="app.request.recap">The agreement you pasted</summary>
+      <summary>The agreement you pasted</summary>
       <textarea id="scope-recap-input" spellcheck="false"></textarea>
     </details>
 
-    <p class="lead" data-i18n="app.request.body">The request itself — forwarded email, Slack message, whatever arrived.</p>
-    <textarea class="field-request" id="request-input" data-i18n-ph="app.request.placeholder" placeholder="“Hey! Quick one — could you also…”" spellcheck="false"></textarea>
+    <p class="lead">The request itself — forwarded email, Slack message, whatever arrived.</p>
+    <textarea class="field-request" id="request-input" placeholder="“Hey! Quick one — could you also…”" spellcheck="false"></textarea>
     <div class="field-foot">
       <span class="counter" id="request-counter"></span>
     </div>
     <p class="error" id="request-error"></p>
 
     <div class="row">
-      <button class="btn-primary btn-primary--grad" id="check-btn" type="button" data-i18n="app.check">Check this request</button>
-      <button class="btn-quiet" id="use-example-request" type="button" data-i18n="app.request.example">Don’t have one? Use an example</button>
-      <button class="btn-quiet" id="back-to-scope" type="button" data-i18n="app.back">Back</button>
+      <button class="btn-primary btn-primary--grad" id="check-btn" type="button">Check this request</button>
+      <button class="btn-quiet" id="use-example-request" type="button">Don’t have one? Use an example</button>
+      <button class="btn-quiet" id="back-to-scope" type="button">Back</button>
     </div>
   </section>
 
@@ -88,16 +88,16 @@
       <div class="loader__inner">
         <div class="loader__percent" id="loader-percent">0%</div>
         <div class="loader__lines" id="loader-lines">
-          <div class="loader__line is-active" data-step="0" data-i18n="app.wait.s1">Reading your agreement</div>
-          <div class="loader__line" data-step="1" data-i18n="app.wait.s2">Comparing the request</div>
-          <div class="loader__line" data-step="2" data-i18n="app.wait.s3">Drafting your reply</div>
+          <div class="loader__line is-active" data-step="0">Reading your agreement</div>
+          <div class="loader__line" data-step="1">Comparing the request</div>
+          <div class="loader__line" data-step="2">Drafting your reply</div>
         </div>
         <div class="loader__steps" id="loader-steps" aria-hidden="true">
           <span class="is-reached"></span><span></span><span></span>
         </div>
       </div>
     </div>
-    <p class="muted small" data-i18n="app.wait.note">Usually five to fifteen seconds.</p>
+    <p class="muted small">Usually five to fifteen seconds.</p>
   </section>
 
   <!-- ── Verdict ───────────────────────────────────────────────────── -->
@@ -107,22 +107,22 @@
       <p id="verdict-reasoning"></p>
       <blockquote class="evidence" id="verdict-evidence" hidden></blockquote>
       <div class="low-confidence" id="verdict-confidence" hidden></div>
-      <p id="verdict-pill-row" hidden><span class="pill" data-i18n="changeOrder.pill">Change order suggested</span></p>
+      <p id="verdict-pill-row" hidden><span class="pill">Change order suggested</span></p>
 
       <div class="reply">
         <div class="reply__head">
-          <span class="label" data-i18n="reply.label">Reply to the client</span>
-          <button class="btn-ghost" id="copy-reply" type="button" data-i18n="app.copy">Copy reply</button>
+          <span class="label">Reply to the client</span>
+          <button class="btn-ghost" id="copy-reply" type="button">Copy reply</button>
         </div>
         <p id="verdict-reply"></p>
       </div>
 
       <details class="change-order" id="change-order" hidden>
-        <summary data-i18n="changeOrder.summary">Change order</summary>
+        <summary>Change order</summary>
         <dl>
-          <dt class="label" data-i18n="changeOrder.what">Summary</dt>
+          <dt class="label">Summary</dt>
           <dd id="co-summary"></dd>
-          <dt class="label" data-i18n="changeOrder.terms">Worth pinning down</dt>
+          <dt class="label">Worth pinning down</dt>
           <dd id="co-terms"></dd>
         </dl>
       </details>
@@ -131,26 +131,25 @@
 
   <!-- ── Price ─────────────────────────────────────────────────────── -->
   <section class="screen" id="screen-price" hidden>
-    <h2 id="price-heading" data-i18n="app.price.title">One check is on us</h2>
-    <p class="lead" id="price-sub" data-i18n="app.price.sub">The next ones are part of the full version.</p>
-    <p class="price__amount"><span id="price-value">$19</span><span class="per">/<span id="price-period">month</span></span></p>
+    <h2 id="price-heading">One check is on us</h2>
+    <p class="lead" id="price-sub">The next ones are part of the full version.</p>
 
-    <div class="list-item"><div data-i18n="app.price.f1">Unlimited checks</div></div>
-    <div class="list-item"><div data-i18n="app.price.f2">Every verdict and reply kept in one place</div></div>
-    <div class="list-item"><div data-i18n="app.price.f3">Several projects, each with its own agreement</div></div>
+    <div class="list-item"><div>Unlimited checks</div></div>
+    <div class="list-item"><div>Every verdict and reply kept in one place</div></div>
+    <div class="list-item"><div>Several projects, each with its own agreement</div></div>
 
     <div class="row" style="margin-top:2rem">
-      <button class="btn-primary btn-primary--grad" id="price-cta" type="button" data-i18n="app.price.cta">Get early access</button>
-      <button class="btn-quiet" id="price-dismiss" type="button" data-i18n="app.price.dismiss">Not now</button>
+      <button class="btn-primary btn-primary--grad" id="price-cta" type="button">Get early access</button>
+      <button class="btn-quiet" id="price-dismiss" type="button">Not now</button>
     </div>
     <p class="error" id="price-note"></p>
   </section>
 
   <!-- ── Failure ───────────────────────────────────────────────────── -->
   <section class="screen" id="screen-error" hidden>
-    <h2 data-i18n="app.error.title">That didn’t come back</h2>
+    <h2>That didn’t come back</h2>
     <p class="lead" id="fatal-error"></p>
-    <button class="btn-primary btn-primary--grad" id="retry-btn" type="button" data-i18n="app.error.retry">Try again</button>
+    <button class="btn-primary btn-primary--grad" id="retry-btn" type="button">Try again</button>
   </section>
 
 </main>
@@ -158,27 +157,27 @@
 <!-- ── Email gate ──────────────────────────────────────────────────── -->
 <div class="gate" id="gate" hidden>
   <div class="gate__box">
-    <h3 data-i18n="gate.title">Where should we send your access?</h3>
-    <p class="muted small" data-i18n="gate.body">
+    <h3>Where should we send your access?</h3>
+    <p class="muted small">
       Your result appears on this screen in a moment — the address is so we can send
       you a way in when the full version opens. That’s the only thing we’ll use it for.
     </p>
     <input type="email" id="email-input" placeholder="you@studio.com" autocomplete="email" inputmode="email">
     <p class="error" id="email-error"></p>
-    <button class="btn-primary btn-primary--grad" id="email-submit" type="button" data-i18n="gate.submit">Show my verdict</button>
-    <p class="gate__exit"><button class="btn-quiet" id="gate-cancel" type="button" data-i18n="app.back">Back</button></p>
+    <button class="btn-primary btn-primary--grad" id="email-submit" type="button">Show my verdict</button>
+    <p class="gate__exit"><button class="btn-quiet" id="gate-cancel" type="button">Back</button></p>
   </div>
 </div>
 
 <footer class="footer">
   <div>Signalens</div>
   <nav>
-    <a href="/privacy.html" data-i18n="nav.privacy">Privacy</a>
-    <a href="/terms.html" data-i18n="nav.terms">Terms</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
   </nav>
 </footer>
 
-<script src="/js/i18n.js"></script>
+<script src="/js/strings.js"></script>
 <script src="/js/analytics.js"></script>
 <script src="/js/example.js"></script>
 <script src="/js/attach.js"></script>

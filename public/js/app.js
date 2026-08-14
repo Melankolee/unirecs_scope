@@ -245,10 +245,6 @@
 
   function init(cfg) {
     if (cfg && cfg.limits) state.limits = cfg.limits;
-    if (cfg && cfg.plan) {
-      $('price-value').textContent = cfg.plan.price;
-      $('price-period').textContent = cfg.plan.period;
-    }
     SG.initAnalytics(cfg ? cfg.ga4MeasurementId : '');
 
     var L = state.limits;
@@ -427,14 +423,6 @@
 
   $('retry-btn').addEventListener('click', function () {
     if (state.leadId) runCheck(); else show('screen-request');
-  });
-
-  /* The verdict and the price heading are built in JS, so a language switch has
-     to rebuild them or half the screen stays in the old language. */
-  SG.onLang(function () {
-    if (state.verdict) renderVerdict(state.verdict);
-    renderAttached();
-    renderPrice();
   });
 
   SG.config().then(init).catch(function () { init(null); });

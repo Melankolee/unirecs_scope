@@ -46,10 +46,15 @@ transpiling, or a framework, it is out of scope for this MVP.
 
 **The price lives in config**, never in markup — it is still being agreed.
 
-**English lives in the markup; `js/i18n.js` only overrides it.** That keeps every
-page readable before the script runs and without JavaScript at all. Anything
-built from JS must re-render through `SG.onLang`, or a language switch leaves
-half the screen behind. The legal pages stay English on purpose.
+**The site is English, and the copy lives in the markup.** That keeps every page
+readable before the script runs and without JavaScript at all. `js/strings.js`
+holds only what markup cannot: text assembled from numbers, verdict labels that
+depend on an answer, errors for things that have not happened yet. If a string
+has a home in the HTML, it belongs there and not in that file.
+
+There was an EN/RU switch; it was removed on request (spec §0), together with
+the pass that rewrote the markup and every `data-i18n` attribute that fed it.
+Re-adding a language means re-adding both — the git history has them.
 
 **`docs/DESIGN.md` describes what is actually in `public/styles.css`.** Change one
 and change the other, or it becomes fiction.

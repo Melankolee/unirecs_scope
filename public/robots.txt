@@ -1,0 +1,9 @@
+# The tool itself carries <meta name="robots" content="noindex">. It is not
+# disallowed here on purpose: a crawler has to fetch a page to read the noindex,
+# so blocking the path would keep the URL indexable instead of dropping it.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://scopeguard.anytoolai.store/sitemap.xml

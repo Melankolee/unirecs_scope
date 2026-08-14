@@ -11,8 +11,9 @@
  * inflates it. Anything heavier than that belongs to a build step this project
  * does not have.
  *
- * Errors reject with an Error carrying .key (an i18n key) and .params, because
- * the caller renders them and the caller knows the language. */
+ * Errors reject with an Error carrying .key (a key into strings.js) and
+ * .params, rather than a finished sentence: the caller is what puts text on
+ * screen, and it decides where. */
 
 window.SG = window.SG || {};
 
