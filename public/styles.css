@@ -467,15 +467,26 @@ textarea:focus, input[type="email"]:focus { border-color: var(--accent); outline
 .counter.is-over { color: var(--stop); }
 
 /* The paperclip sits in the field's own bottom-left corner rather than in the
-   foot: it acts on the field, and the extra padding-bottom above keeps the text
-   off it. It is an accent-washed chip — opaque, so a scrolled agreement passes
-   behind it instead of through it, and coloured because in the corner of an
-   empty dark field a muted grey label reads as a caption, not as something to
-   press. It stops short of the right corner so the resize grip stays reachable.
+   foot: it acts on the field, and the extra padding-bottom above keeps the
+   first lines off it. It is an accent-washed chip, coloured because in the
+   corner of an empty dark field a muted grey label reads as a caption, not as
+   something to press. It stops short of the right corner so the resize grip
+   stays reachable.
    The wash is the only fill on this screen besides the primary button, and it
    sits two steps below it in weight: colour enough to be found, not enough to
-   compete with "Next". */
+   compete with "Next".
+
+   It belongs to the empty field. Once there is text the chip has nothing left
+   to offer and starts costing: it lies over a line of the agreement, and an
+   opaque box in the middle of a contract reads as damage rather than as
+   something to press. So a filled field takes it away, and the padding it had
+   reserved goes with it. :placeholder-shown is the test: the placeholder is in
+   the markup, and everything that fills the field — typing, a paste, the
+   example button, a parsed file — takes it off, so nothing has to be toggled
+   from script. */
 .field-wrap { position: relative; }
+.field-wrap:has(.field-scope:not(:placeholder-shown)) .attach { display: none; }
+.field-wrap:has(.field-scope:not(:placeholder-shown)) .field-scope { padding-bottom: 1.1rem; }
 .attach {
   position: absolute; left: 0.7rem; bottom: 0.7rem; max-width: calc(100% - 3rem);
   display: flex; align-items: center; gap: 0.75rem; min-width: 0;

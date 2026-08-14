@@ -34,7 +34,6 @@ window.SG = window.SG || {};
     'app.price.done': 'You’re on the list — we’ll email you when it opens.',
 
     'app.attach.reading': 'Reading {name}…',
-    'app.attach.added': 'Text from {name}',
     'app.attach.err.type': 'That format can’t be read here — attach a .docx, .txt or .md, or paste the text.',
     'app.attach.err.legacy': 'Old .doc files can’t be read here. Save it as .docx, or paste the text.',
     'app.attach.err.big': 'That file is over {n} MB. Paste the part that matters instead.',

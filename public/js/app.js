@@ -5,7 +5,6 @@
     limits: { scopeMin: 200, scopeMax: 15000, requestMin: 20, requestMax: 3000 },
     leadId: null,
     exampleUsed: false,
-    attachedName: null,
     attachUsed: false,
     verdict: null,
     priceLimited: false,
@@ -41,22 +40,20 @@
    * The agreement usually exists as a file, and retyping it is where the check
    * gets abandoned. SG.readDocument turns the file into text in the browser;
    * nothing but that text reaches the field, and nothing but the field is ever
-   * sent. The file name is shown back but never travels — not to the server and
-   * not into an analytics event, where "Contract — Acme Ltd.docx" would be the
-   * client's name in a report. */
-
-  function renderAttached() {
-    $('attach-name').textContent = state.attachedName
-      ? SG.t('app.attach.added', { name: state.attachedName })
-      : '';
-  }
+   * sent. The file name is shown back while the file is being read but never
+   * travels — not to the server and not into an analytics event, where
+   * "Contract — Acme Ltd.docx" would be the client's name in a report.
+   *
+   * Nothing is said once the text lands: the chip is only there while the field
+   * is empty (styles.css), and the text now in the field is the better receipt
+   * anyway. The line is cleared either way so that a field emptied later brings
+   * back the paperclip and not the name of a file whose text has just gone. */
 
   function attach(file) {
     if (!file) return;
     var input = $('scope-input');
 
     $('scope-error').textContent = '';
-    state.attachedName = null;
     $('attach-name').textContent = SG.t('app.attach.reading', { name: file.name });
 
     SG.readDocument(file).then(function (text) {
@@ -67,12 +64,11 @@
       input.value = current ? current + '\n\n' + text : text;
       input.dispatchEvent(new Event('input'));
 
-      state.attachedName = file.name;
       state.attachUsed = true;
-      renderAttached();
+      $('attach-name').textContent = '';
       SG.track('attachment_used', { kind: file.name.split('.').pop().toLowerCase() });
     }).catch(function (err) {
-      renderAttached();
+      $('attach-name').textContent = '';
       $('scope-error').textContent = SG.t(err.key || 'app.attach.err.read', err.params);
       SG.track('attachment_error', { reason: err.key || 'unknown' });
     });
