@@ -1,4 +1,4 @@
-# Signalens
+# Mailtrick
 
 A freelancer pastes the terms they agreed to and the message their client just
 sent. They get back a verdict — in scope, out of scope, or genuinely unclear —
@@ -8,9 +8,10 @@ This is a demand test, not a product. One mechanic, no accounts, no billing.
 The spec it is built to is [`docs/scopeguard-mvp-spec.md`](docs/scopeguard-mvp-spec.md),
 and the look is described in [`docs/DESIGN.md`](docs/DESIGN.md).
 
-The product was called Scope Creep Guard until August 2026. The old name survives
-in the places where it is only an identifier — the systemd unit, `/srv/scopeguard`,
-the `sg_vid` cookie, the `product` field on analytics events — because renaming
+The product was called Scope Creep Guard until August 2026, and Mailtrick after
+a short spell as Signalens. Only the surface name has ever moved: `scopeguard`
+still names the systemd unit, `/srv/scopeguard`, the `sg_vid` cookie, the
+`product` field on analytics events and the host it is served from — renaming
 those splits the reports and buys nothing.
 
 ## Running it locally

@@ -1,5 +1,5 @@
 /* GA4 wrapper. Every event carries product: "scopeguard" — the product is now
- * called Signalens, but this string is an analytics key, and renaming it would
+ * called Mailtrick, but this string is an analytics key, and renaming it would
  * split every report at the rename date for no gain.
  *
  * Analytics cookies are not set until the visitor accepts. Events fired before

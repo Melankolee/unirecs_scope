@@ -1,6 +1,6 @@
 # Working in this repo
 
-Signalens — a one-mechanic demand test. Read
+Mailtrick — a one-mechanic demand test. Read
 [`docs/scopeguard-mvp-spec.md`](docs/scopeguard-mvp-spec.md) before changing
 behaviour; it is the source of truth and it says what deliberately isn't here.
 Its §0 records where the shipped product knowingly departs from the rest of it.
