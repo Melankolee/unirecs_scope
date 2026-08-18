@@ -11,7 +11,8 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "migrate": "node scripts/migrate.js",
-    "prompt:try": "node scripts/try-prompt.js"
+    "prompt:try": "node scripts/try-prompt.js",
+    "report:emails": "node scripts/report-emails.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",

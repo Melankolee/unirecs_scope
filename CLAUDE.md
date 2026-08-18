@@ -12,9 +12,10 @@ event — those are keys, and renaming them buys nothing and splits the reports.
 ## Commands
 
 ```sh
-npm run dev          # local server with --watch
-npm run migrate      # apply sql/*.sql in order
-npm run prompt:try   # run the prompt against fixtures/cases.json
+npm run dev           # local server with --watch
+npm run migrate       # apply sql/*.sql in order
+npm run prompt:try    # run the prompt against fixtures/cases.json
+npm run report:emails # checks per address, read out of the database
 ```
 
 ## Rules that aren't obvious from the code

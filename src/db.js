@@ -91,3 +91,31 @@ export async function checksToday() {
   );
   return rows[0].n;
 }
+
+/**
+ * Checks per address, for the report. The `verdict IS NOT NULL` test is the
+ * same one `checksUsed` applies, so a row counted here is a row that spent
+ * someone's allowance — and landing-page signups (`source: 'access'`, never
+ * given a verdict) stay out of the numbers without needing a filter of their
+ * own.
+ *
+ * This is only half of what the gate counts: the allowance is spent on
+ * (email OR cookie), so an address that shows 4 here can still be refused a
+ * fifth check on a cookie that has been used under another address. Grouping
+ * by cookie instead would be the mirror image of the same table.
+ */
+export async function checksPerEmail() {
+  const { rows } = await query(
+    `SELECT lower(email)                                AS email,
+            count(*)::int                               AS checks,
+            (count(*) FILTER (WHERE reply_copied))::int AS replies_copied,
+            (count(*) FILTER (WHERE price_cta))::int    AS price_cta,
+            min(created_at)                             AS first_at,
+            max(created_at)                             AS last_at
+       FROM leads_scopeguard
+      WHERE verdict IS NOT NULL
+      GROUP BY 1
+      ORDER BY checks DESC, last_at DESC`,
+  );
+  return rows;
+}
