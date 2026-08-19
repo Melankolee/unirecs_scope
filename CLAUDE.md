@@ -31,6 +31,23 @@ that answers "is this dangerous?" up front asks the question for you). The rule
 does not depend on the copy: the privacy notice still promises it, and people are
 pasting client contracts.
 
+**Two analytics channels, and they answer to different rules.** `/api/track`
+writes every event to `events_scopeguard` for every visitor, always: nothing is
+stored on the device to make it work, so the cookie banner has no say in it, and
+this is the channel the funnel is read from. GA4 is the other one, it is what
+the banner governs, and it is shown only where the law requires asking — the
+server decides that in `/api/config` (`geo.js`), never the browser. A stored
+`sg_consent = denied` wins over automatic consent everywhere. Two things stay
+out of scope by decision, not by oversight: no opt-out control outside the
+regions that get the banner, and no defeating a refusal that already exists —
+no proxying GTM through our own domain, no re-setting cookies server-side to
+beat ITP.
+
+**Whatever a page says, the code must already do.** `privacy.html` is not
+decoration — it promised for a while that declining stopped analytics events,
+which stopped being true the day `/api/track` shipped. Change behaviour, change
+that page in the same commit.
+
 **The email gate stays before the verdict.** An address given for value already
 received measures something other than what this test measures. Don't "improve"
 the flow by moving it.

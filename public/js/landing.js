@@ -1,10 +1,12 @@
 (function () {
   var $ = function (id) { return document.getElementById(id); };
 
+  // The whole config, not just the measurement id: it also carries whether this
+  // visitor is one we have to ask before loading GA4.
   SG.config().then(function (cfg) {
-    SG.initAnalytics(cfg.ga4MeasurementId);
+    SG.initAnalytics(cfg);
   }).catch(function () {
-    SG.initAnalytics('');
+    SG.initAnalytics(null);
   });
 
   document.querySelectorAll('[data-cta]').forEach(function (el) {
@@ -31,6 +33,8 @@
     var openAccess = function (from) {
       placement = from;
       access.hidden = false;
+      // The page behind a fixed overlay scrolls under the finger otherwise.
+      document.body.classList.add('is-locked');
       // Reopened after a successful signup, the box is already on its thank-you
       // state and there is no field to put the cursor in.
       if (!$('access-form').hidden) $('access-email').focus();
@@ -39,6 +43,7 @@
 
     var closeAccess = function () {
       access.hidden = true;
+      document.body.classList.remove('is-locked');
       $('access-error').textContent = '';
     };
 

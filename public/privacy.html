@@ -75,6 +75,10 @@
     <li>The verdict and its confidence level.</li>
     <li>The number of characters in each of your two inputs — not the inputs themselves.</li>
     <li>Whether you copied the reply, and whether you clicked the pricing button.</li>
+    <li>
+      A record of how you used the site — pages opened, buttons used, which
+      verdict came back and when. It never contains the text you paste.
+    </li>
     <li>Date and time.</li>
     <li>Advertising identifiers from the link you arrived on (<code>gclid</code>, <code>utm_*</code>), if present.</li>
     <li>A random identifier stored in a cookie, so we can count the free checks a visitor has used.</li>
@@ -97,10 +101,12 @@
 
   <h2>Cookies</h2>
   <p>
-    One strictly necessary cookie (<code>sg_vid</code>) holds a random identifier
-    and is what keeps the free checks tied to one visitor. It lasts 180 days and
-    carries nothing about you. Your answer to the cookie banner is kept in your
-    browser’s local storage, not in a cookie, and never reaches us.
+    One cookie (<code>sg_vid</code>) holds a random identifier. It is what keeps
+    the free checks tied to one visitor, and it is also what ties together the
+    record of how you used the site described above. It is set on your first
+    page, lasts 180 days, and carries nothing about you beyond that number. Your
+    answer to the cookie banner is kept in your browser’s local storage, not in
+    a cookie, and never reaches us.
   </p>
   <p>
     If you arrived from an advertised link, the identifiers in it
@@ -110,10 +116,19 @@
     only when you give us that address.
   </p>
   <p>
-    Google Analytics cookies are set only if you accept them in the banner. If you
-    decline, no analytics cookies are set and no analytics events are sent.
+    In the UK, the EEA and Switzerland we ask before setting Google Analytics
+    cookies, and none are set unless you accept. Elsewhere they are set when the
+    page loads. If you decline, no Google Analytics cookies are set and nothing
+    about your visit is sent to Google; that answer is remembered and stays in
+    force wherever you next open the site from.
     Analytics data is processed by Google; see the
     <a href="https://policies.google.com/privacy" rel="noopener">Google privacy policy</a>.
+  </p>
+
+  <p>
+    The record of how the site was used, described above, is kept on our own
+    servers. It is not shared with Google, and nothing is stored on your device
+    to produce it, so the cookie choice above does not change it.
   </p>
 
   <h2>Sharing</h2>
@@ -121,7 +136,7 @@
     We do not sell your information. It is shared only with the providers that run
     the service: our hosting provider (servers in Finland, EU), ProxyAPI (Russia,
     which relays requests to the language model), OpenAI (United States, the
-    language model), and Google (analytics, if you accepted). Transfers outside the EEA
+    language model), and Google (analytics, unless you have declined). Transfers outside the EEA
     rely on the European Commission’s standard contractual clauses.
   </p>
 

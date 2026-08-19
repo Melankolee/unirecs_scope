@@ -119,3 +119,16 @@ export async function checksPerEmail() {
   );
   return rows;
 }
+
+/**
+ * One event, written on our side for every visitor. Deliberately not awaited by
+ * its callers on the page-view path: a counter that can make a page slow is a
+ * counter that will eventually be removed for making pages slow.
+ */
+export async function insertEvent({ name, visitorId, path, params }) {
+  await query(
+    `INSERT INTO events_scopeguard (name, visitor_id, path, params)
+     VALUES ($1, $2, $3, $4)`,
+    [name, visitorId || null, path || null, params || {}],
+  );
+}

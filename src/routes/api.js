@@ -1,20 +1,19 @@
-import { randomUUID } from 'node:crypto';
 import { Router } from 'express';
 import { config } from '../config.js';
+import { consentRequired } from '../geo.js';
 import { checkScope, LlmError } from '../llm.js';
 import { rateLimit } from '../rateLimit.js';
-import { cleanMarks, validateEmail, validateInputs } from '../validate.js';
+import { cleanEvent, cleanMarks, validateEmail, validateInputs } from '../validate.js';
+import { VISITOR_COOKIE, visitorId } from '../visitor.js';
 import {
   checksToday,
   checksUsed,
+  insertEvent,
   insertLead,
   leadBelongsToVisitor,
   markFlag,
   saveVerdict,
 } from '../db.js';
-
-const VISITOR_COOKIE = 'sg_vid';
-const COOKIE_MAX_AGE = 180 * 24 * 60 * 60 * 1000;
 
 export const api = Router();
 
@@ -24,26 +23,18 @@ function log(fields) {
   console.log(JSON.stringify({ ts: new Date().toISOString(), ...fields }));
 }
 
-function visitorId(req, res) {
-  let id = req.cookies?.[VISITOR_COOKIE];
-  if (!id || typeof id !== 'string' || id.length > 64) {
-    id = randomUUID();
-    res.cookie(VISITOR_COOKIE, id, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: config.cookieSecure,
-      maxAge: COOKIE_MAX_AGE,
-      path: '/',
-    });
-  }
-  return id;
-}
-
-api.get('/config', (req, res) => {
+/**
+ * `consentRequired` is decided here rather than in the browser because the
+ * browser cannot be trusted to know where it is and, more to the point, the
+ * answer must not be something a visitor can flip. The page already waits for
+ * this response before starting analytics, so it costs no extra round trip.
+ */
+api.get('/config', async (req, res) => {
   res.json({
     plan: config.plan,
     ga4MeasurementId: config.ga4MeasurementId,
     limits: config.limits,
+    consentRequired: await consentRequired(req.ip),
   });
 });
 
@@ -160,6 +151,37 @@ api.post('/check', rateLimit({ max: 5 }), async (req, res) => {
       error: "The check didn't come back. Nothing you pasted was stored — try once more.",
     });
   }
+});
+
+/**
+ * The first-party event sink. Every visitor, every event, regardless of the
+ * cookie banner: the row is written here, on our side, from a request the
+ * browser was making anyway, and nothing is stored on the visitor's device to
+ * make it work. The banner governs GA4, which does write to the device and does
+ * hand the data to Google.
+ *
+ * `/event` next door is a different thing and older — it flips a flag on a lead.
+ * This one takes named events with small parameters and keeps them all.
+ *
+ * Answers 204 to everything, including rubbish: `sendBeacon` fires into a page
+ * that may already be gone, so there is nobody left to read an error.
+ */
+api.post('/track', rateLimit({ max: 240 }), async (req, res) => {
+  const vid = visitorId(req, res);
+  const event = cleanEvent(req.body);
+  if (!event.ok) return res.status(204).end();
+
+  try {
+    await insertEvent({
+      name: event.name,
+      visitorId: vid,
+      path: event.path,
+      params: event.params,
+    });
+  } catch (err) {
+    log({ level: 'error', at: 'track', name: event.name, message: err.message || err.code || String(err) });
+  }
+  return res.status(204).end();
 });
 
 api.post('/event', rateLimit({ max: 30 }), async (req, res) => {

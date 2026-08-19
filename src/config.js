@@ -53,6 +53,13 @@ export const config = {
 
   ga4MeasurementId: process.env.GA4_MEASUREMENT_ID || '',
 
+  // Where the visitor is, which decides whether the cookie banner is shown.
+  // `{ip}` is substituted into the URL. Empty = no lookup at all, and that
+  // fails closed: everyone is asked. A misconfigured deploy that quietly
+  // stopped asking would be the expensive kind of mistake.
+  geoApiUrl: process.env.GEO_API_URL || '',
+  geoTimeoutMs: int('GEO_TIMEOUT_MS', 1500),
+
   limits: {
     scopeMin: 200,
     scopeMax: 15000,

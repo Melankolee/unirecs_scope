@@ -106,13 +106,17 @@ p { margin: 0 0 1rem; }
 .section { padding: 5rem 0; }
 .screen { max-width: var(--measure); margin: 0 auto; padding: 4rem 1.5rem; }
 
+/* Every auto-fit grid here wraps its floor in min(…, 100%). A bare
+   minmax(22rem, 1fr) keeps the 22rem even when the container is narrower than
+   that: the row does not drop to one column, it runs off the side of the
+   phone and takes the whole page's horizontal scroll with it. */
 .cols-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
   gap: 3.5rem;
   align-items: center;
 }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr)); gap: 1.5rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(21rem, 100%), 1fr)); gap: 1.5rem; }
 .row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
 
 /* Deeper band to separate sections on an already-dark page */
@@ -190,8 +194,11 @@ p { margin: 0 0 1rem; }
 }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent-2); }
 
+/* The underlined line of text is 15px tall, and that is what a finger has to
+   hit — so the box around it is grown to 44px without moving the text. */
 .btn-quiet {
   background: none; border: 0; padding: 0;
+  display: inline-flex; align-items: center; min-height: 2.75rem;
   color: var(--muted); font-weight: 400; font-size: 0.95rem;
   text-decoration: underline; text-underline-offset: 3px;
 }
@@ -275,7 +282,7 @@ a.btn-block { display: block; }
 .features__title { max-width: 20ch; text-wrap: balance; margin-bottom: 3rem; }
 /* Two cards, not three steps: they hold a paragraph and a list each, so they
    drop to one column earlier than .cards would on its own. */
-.cards--pair { grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr)); }
+.cards--pair { grid-template-columns: repeat(auto-fit, minmax(min(26rem, 100%), 1fr)); }
 .feature { display: flex; flex-direction: column; padding: 2.25rem; }
 .feature--deep { background: var(--bg-deep); }
 .feature__head { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.5rem; }
@@ -411,7 +418,10 @@ a.btn-block { display: block; }
 }
 
 .reply { background: var(--bg-sunken); border-radius: var(--radius); padding: 1.4rem; }
-.reply__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.9rem; }
+/* Wrapping, not shrinking: side by side the label and the button fit on a
+   laptop and nowhere near a phone, where both broke across two lines at once.
+   Over the width, the button drops to its own row whole. */
+.reply__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem; margin-bottom: 0.9rem; }
 .reply p { margin: 0; white-space: pre-line; }
 
 /* Sits where .evidence sits on the other two verdicts, and so takes the same
@@ -431,6 +441,7 @@ a.btn-block { display: block; }
   border: 1px solid transparent;
   border-radius: var(--radius);
   padding: 0.55rem 1rem;
+  min-height: 2.75rem;
   cursor: pointer;
   font: 400 12px/1 var(--mono);
   letter-spacing: 0.08em;
@@ -468,7 +479,7 @@ textarea:focus, input[type="email"]:focus { border-color: var(--accent); outline
 /* Tall enough to look like it wants a whole agreement, short enough that the
    field and the button under it share one screen — the paste is a scroll either
    way, but a visitor who cannot see "Next" reads the screen as unfinished. */
-.field-scope { min-height: 13rem; padding-bottom: 3rem; }
+.field-scope { min-height: 13rem; padding-bottom: 3.5rem; }
 .field-request { min-height: 10rem; }
 
 /* The action row keeps every real button, so the primary action stays close to
@@ -506,12 +517,12 @@ textarea:focus, input[type="email"]:focus { border-color: var(--accent); outline
   position: absolute; left: 0.7rem; bottom: 0.7rem; max-width: calc(100% - 3rem);
   display: flex; align-items: center; gap: 0.75rem; min-width: 0;
   background: var(--accent-wash); border: 1px solid var(--accent-dim);
-  border-radius: 8px; padding: 0.4rem 0.6rem;
+  border-radius: 8px; padding: 0.5rem 0.65rem;
 }
 .field-wrap:has(textarea.is-drop) .attach { border-color: var(--accent); }
 .attach__btn {
   display: inline-flex; align-items: center; gap: 0.4rem; flex: none;
-  background: none; border: 0; padding: 0; cursor: pointer;
+  background: none; border: 0; padding: 0.35rem 0; cursor: pointer;
   font: 400 12px/1 var(--mono); color: var(--accent-2);
 }
 .attach__btn:hover { color: var(--text); }
@@ -565,7 +576,7 @@ textarea.is-drop { border-color: var(--accent); background: var(--bg-raised); }
    way a wrapped row gets its rule for free and no cell ends with a stray one. */
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -602,6 +613,28 @@ textarea.is-drop { border-color: var(--accent); background: var(--bg-raised); }
   cursor: help;
 }
 .hint:hover { color: var(--text); border-color: var(--accent-dim); }
+
+/* On a touch screen the native tooltip never opens — the source line is there
+   and the explanation behind it is not reachable at all. There, and only
+   there, the same title is shown as a bubble on tap; on a pointer the browser
+   already does it, and two tooltips at once is worse than one. The copy has
+   one home either way, the title attribute in the markup. */
+@media (hover: none) {
+  .hint { position: relative; }
+  .hint:focus { outline: none; color: var(--text); border-color: var(--accent-dim); }
+  .hint:focus::after {
+    content: attr(title);
+    position: absolute; z-index: 10;
+    right: 0; bottom: calc(100% + 0.5rem);
+    width: min(18rem, 62vw);
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem 0.9rem;
+    font-size: 0.85rem; line-height: 1.45;
+    color: var(--text); text-align: left;
+  }
+}
 
 .cost__close { color: var(--muted); max-width: 34rem; margin: 2.5rem 0 0; }
 .cost__close b { color: var(--text); }
@@ -724,14 +757,23 @@ textarea.is-drop { border-color: var(--accent); background: var(--bg-raised); }
 }
 
 /* ---------- Email gate / access form ---------- */
+/* Centred by auto margins on the box, not by align-items: with align-items
+   the box is centred against a viewport it can be taller than — the top of it
+   goes above the edge and no scroll reaches it. That is exactly the phone
+   case: the field takes focus, the keyboard opens, and the layout viewport
+   halves. Auto margins collapse to zero once the space runs out, so the box
+   starts at the top and the overlay scrolls to the rest of it. */
 .gate {
   position: fixed; inset: 0; z-index: 60;
   background: rgba(8, 8, 12, 0.72);
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: flex-start; justify-content: center;
   padding: 1.5rem;
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .gate__box {
-  width: 100%; max-width: 26rem;
+  width: 100%; max-width: 26rem; margin: auto;
   background: var(--bg-raised);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -745,12 +787,23 @@ textarea.is-drop { border-color: var(--accent); background: var(--bg-raised); }
 .gate__box a.btn-primary { text-align: center; }
 .gate__exit { text-align: center; }
 
+/* app.js and landing.js set this while the overlay is up: without it the page
+   underneath scrolls under the finger and the box drifts off the screen. */
+body.is-locked { overflow: hidden; }
+
 /* ---------- Cookie bar ---------- */
 .cookie {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
   background: var(--bg-raised);
   border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
 }
+/* The bar covers the last stretch of the page for as long as it is up, and on
+   a phone it wraps to two rows and covers 8rem of it — which is the footer,
+   its links and, on the landing, the footer CTA. So the page reserves the
+   height while the bar exists; analytics.js takes the bar away for good once
+   the visitor answers, and the reserve goes with it. */
+body:has(.cookie) { padding-bottom: 6rem; }
 .cookie__inner {
   max-width: var(--page); margin: 0 auto; padding: 1rem 2rem;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
@@ -783,4 +836,19 @@ textarea.is-drop { border-color: var(--accent); background: var(--bg-raised); }
   .section { padding: 3.5rem 0; }
   .screen { padding: 2.5rem 1.25rem; }
   .cookie__inner, .footer { padding: 1rem 1.25rem; }
+
+  /* 2rem of card inside 1.25rem of screen left the reply itself a 170px
+     column. The cards come down a step so the text keeps the width. */
+  .card, .feature, .stat, .gate__box { padding: 1.5rem; }
+  .card--cta { padding: clamp(2.25rem, 4vw, 3rem) 1.5rem; }
+
+  /* Same trick as .btn-quiet: the row of footer links is 23px of text, and a
+     border-bottom cannot be padded away from the word it underlines. */
+  .footer nav { gap: 0.25rem 1.5rem; }
+  .footer nav a {
+    padding: 0.6rem 0; border-bottom: 0;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+
+  body:has(.cookie) { padding-bottom: 10rem; }
 }

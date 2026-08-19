@@ -66,7 +66,13 @@
 
       state.attachUsed = true;
       $('attach-name').textContent = '';
-      SG.track('attachment_used', { kind: file.name.split('.').pop().toLowerCase() });
+      // Only the shape of the extension, never a slice of the name. What comes
+      // after the last dot is whatever the visitor called the file, and the
+      // file name is the one thing about an attachment that never leaves the
+      // browser — now that events are kept on our side too, an unbounded
+      // "extension" would be the hole in that.
+      var kind = file.name.split('.').pop().toLowerCase();
+      SG.track('attachment_used', { kind: /^[a-z0-9]{1,8}$/.test(kind) ? kind : 'other' });
     }).catch(function (err) {
       $('attach-name').textContent = '';
       $('scope-error').textContent = SG.t(err.key || 'app.attach.err.read', err.params);
@@ -241,7 +247,7 @@
 
   function init(cfg) {
     if (cfg && cfg.limits) state.limits = cfg.limits;
-    SG.initAnalytics(cfg ? cfg.ga4MeasurementId : '');
+    SG.initAnalytics(cfg);
 
     var L = state.limits;
     bindCounter($('scope-input'), $('scope-counter'), L.scopeMax);
@@ -332,6 +338,13 @@
     $('scope-input').dispatchEvent(new Event('input'));
   });
 
+  // The overlay is fixed and the page behind it is not: without the lock the
+  // page scrolls under the finger while the gate is up.
+  function gate(open) {
+    $('gate').hidden = !open;
+    document.body.classList.toggle('is-locked', open);
+  }
+
   $('check-btn').addEventListener('click', function () {
     var error = localValidate(
       $('request-input').value, state.limits.requestMin, state.limits.requestMax, 'app.what.request',
@@ -339,12 +352,12 @@
     $('request-error').textContent = error || '';
     if (error) return;
 
-    $('gate').hidden = false;
+    gate(true);
     $('email-input').focus();
   });
 
   $('gate-cancel').addEventListener('click', function () {
-    $('gate').hidden = true;
+    gate(false);
   });
 
   $('email-input').addEventListener('keydown', function (event) {
@@ -359,7 +372,7 @@
 
     post('/api/lead', { email: $('email-input').value, marks: marks })
       .then(function (data) {
-        $('gate').hidden = true;
+        gate(false);
         button.disabled = false;
 
         if (data.limited) {

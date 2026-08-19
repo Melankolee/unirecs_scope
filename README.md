@@ -141,9 +141,17 @@ sudo -u scopeguard chmod 600 .env        # it holds the API key
 sudo -u scopeguard mkdir -p dumps        # systemd's ReadWritePaths expects it
 ```
 
-Production differs from local in five values: `NODE_ENV=production`,
-`COOKIE_SECURE=1`, a real `DATABASE_URL`, a fresh `OPENAI_API_KEY`, and the
-`PRICE_*_PER_MTOK` tariff.
+Production differs from local in six values: `NODE_ENV=production`,
+`COOKIE_SECURE=1`, a real `DATABASE_URL`, a fresh `OPENAI_API_KEY`, the
+`PRICE_*_PER_MTOK` tariff, and `GEO_API_URL`.
+
+`GEO_API_URL` decides where the cookie banner is shown: in the UK, the EEA and
+Switzerland the visitor is asked, everywhere else consent is automatic. Leave it
+empty and every visitor is asked — the lookup fails closed, so a missing or
+broken provider costs a banner rather than a complaint. Behind it, `req.ip` has
+to be the visitor's, which is what `trust proxy` and the `X-Forwarded-For` line
+in `nginx.conf` are for; break either and every visitor looks local and is
+asked.
 
 The nightly dump runs from `/etc/cron.d/scopeguard`:
 
@@ -177,5 +185,9 @@ exporting them, so `dump.sh` — a separate process — starts with no
 - [ ] Confirm the price in `PLAN_PRICE` with the client
 - [ ] Set `GA4_MEASUREMENT_ID`, then import `email_submit` and `verdict_shown`
       into Google Ads as conversions
+- [ ] Set `GEO_API_URL` and check `/api/config` from outside the EEA — without it
+      the banner is shown to everyone and GA4 stays nearly empty
+- [ ] Run `npm run migrate` for `events_scopeguard`, then confirm a page view
+      lands in it
 - [ ] Run 15–20 prompt cases and fix what they surface
 - [ ] Confirm the nightly dump actually produced a file

@@ -77,3 +77,53 @@ export function cleanMarks(input) {
   }
   return out;
 }
+
+const EVENT_NAME_RE = /^[a-z][a-z0-9_]{0,39}$/;
+const EVENT_KEY_RE = /^[a-z][a-z0-9_]{0,39}$/;
+const EVENT_MAX_KEYS = 12;
+const EVENT_MAX_VALUE = 120;
+
+/**
+ * An event is a name and a handful of small labels. The 120-character ceiling
+ * on a value is not formatting — it is where the storage rule is enforced. A
+ * pasted contract cannot fit through it even if some future caller passes one
+ * by accident, and anything over the ceiling is dropped rather than shortened:
+ * a truncated contract is still a stored contract.
+ *
+ * Unknown keys and unusable values are dropped silently. The alternative is an
+ * error the browser cannot act on — `sendBeacon` has nowhere to put a reply.
+ */
+export function cleanEvent(input) {
+  const name = String(input?.name ?? '').trim();
+  if (!EVENT_NAME_RE.test(name)) return { ok: false };
+
+  const params = {};
+  const raw = input?.params;
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    for (const key of Object.keys(raw).slice(0, EVENT_MAX_KEYS)) {
+      if (!EVENT_KEY_RE.test(key)) continue;
+      const value = raw[key];
+      if (typeof value === 'boolean') params[key] = value;
+      else if (typeof value === 'number' && Number.isFinite(value)) params[key] = value;
+      else if (typeof value === 'string' && value.length > 0 && value.length <= EVENT_MAX_VALUE) {
+        params[key] = value;
+      }
+    }
+  }
+
+  return { ok: true, name, params, path: pageViewPath(String(input?.path ?? '')) };
+}
+
+const ASSET_RE = /\.(?:css|js|mjs|png|jpe?g|svg|ico|txt|xml|json|webmanifest|woff2?|map)$/i;
+
+/**
+ * Which paths count as a page. Assets are excluded because a page view is meant
+ * to be the denominator of the funnel, and counting `styles.css` alongside `/`
+ * would quietly inflate it. Returns null for anything that is not a page.
+ */
+export function pageViewPath(path) {
+  if (!path.startsWith('/') || path.length > 120) return null;
+  if (path.startsWith('/api/') || path === '/healthz') return null;
+  if (ASSET_RE.test(path)) return null;
+  return path;
+}
