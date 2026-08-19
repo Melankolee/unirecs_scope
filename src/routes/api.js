@@ -42,7 +42,7 @@ api.get('/config', async (req, res) => {
  * The email gate. Deliberately before the verdict: an address given for value
  * already received measures something other than what we want to measure.
  */
-api.post('/lead', rateLimit({ max: 8 }), async (req, res) => {
+api.post('/lead', rateLimit({ name: 'lead', max: 8 }), async (req, res) => {
   const vid = visitorId(req, res);
   const { ok, email, error } = validateEmail(req.body?.email);
   if (!ok) return res.status(400).json({ error });
@@ -69,7 +69,7 @@ api.post('/lead', rateLimit({ max: 8 }), async (req, res) => {
  * `source: 'access'` and stays out of the gate's numbers. No verdict is ever
  * written against it, which is also why it does not spend the free check.
  */
-api.post('/access', rateLimit({ max: 8 }), async (req, res) => {
+api.post('/access', rateLimit({ name: 'access', max: 8 }), async (req, res) => {
   const vid = visitorId(req, res);
   const { ok, email, error } = validateEmail(req.body?.email);
   if (!ok) return res.status(400).json({ error });
@@ -89,7 +89,7 @@ api.post('/access', rateLimit({ max: 8 }), async (req, res) => {
   }
 });
 
-api.post('/check', rateLimit({ max: 5 }), async (req, res) => {
+api.post('/check', rateLimit({ name: 'check', max: 5 }), async (req, res) => {
   const vid = req.cookies?.[VISITOR_COOKIE];
   const leadId = Number.parseInt(req.body?.leadId, 10);
 
@@ -166,7 +166,7 @@ api.post('/check', rateLimit({ max: 5 }), async (req, res) => {
  * Answers 204 to everything, including rubbish: `sendBeacon` fires into a page
  * that may already be gone, so there is nobody left to read an error.
  */
-api.post('/track', rateLimit({ max: 240 }), async (req, res) => {
+api.post('/track', rateLimit({ name: 'track', max: 240 }), async (req, res) => {
   const vid = visitorId(req, res);
   const event = cleanEvent(req.body);
   if (!event.ok) return res.status(204).end();
@@ -184,7 +184,7 @@ api.post('/track', rateLimit({ max: 240 }), async (req, res) => {
   return res.status(204).end();
 });
 
-api.post('/event', rateLimit({ max: 30 }), async (req, res) => {
+api.post('/event', rateLimit({ name: 'event', max: 30 }), async (req, res) => {
   const vid = req.cookies?.[VISITOR_COOKIE];
   const leadId = Number.parseInt(req.body?.leadId, 10);
   const type = req.body?.type;
